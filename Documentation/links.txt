@@ -1,0 +1,10 @@
+Group Pathfinding & Movement in RTS Style Games:
+
+https://www.gamasutra.com/blogs/AndrewErridge/20180522/318413/Group_Pathfinding__Movement_in_RTS_Style_Games.php
+-----------------------------------------------------------------------
+
+Adaptive RTS
+
+http://twcjohnson.com/adaptive-rts/
+-----------------------------------------------------------------------
+
