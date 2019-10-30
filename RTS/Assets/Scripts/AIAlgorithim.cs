@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AIAlgorithim
+public abstract class AIAlgorithim <T>
 {
-    public abstract void GetNextAction();
-    
+    public abstract T GetNextAction ();
+
 }

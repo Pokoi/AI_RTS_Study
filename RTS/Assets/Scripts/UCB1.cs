@@ -3,95 +3,83 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum RPSAction
+public class UCB1 <T> : AIAlgorithim <T>
 {
-    Rock, Paper, Scissors
-}
-public class UCB1 : MonoBehaviour
-{
-    public int totalActions; // Rondas jugadas
-    public int[] count; // Acciones jugadas de cada tipo
-    public float[] score; // Acumulado de puntos conseguidos con cada acción
-    public float[] UCB1scores; // Cálculo intermedio de cada acción de función a maximizar
-    public int numActions; // Acciones disponibles
-    public RPSAction lastAction; // Última acción realizada
+    public int playedRounds;    
+    public int [] timesPlayedByAction;        
+    public float [] scoreByAction;  
+    public float [] UCB1scoresByAction; 
+    public int totalAvailableActions;   
+    public T lastAction; 
 
-    public Sprite[] sprites;
-    SpriteRenderer sr;
 
-    // Start is called before the first frame update
-    void Start()
+    UCB1()
     {
-        sr = GetComponent<SpriteRenderer>();
         InitUCB1();
     }
-    public void InitUCB1()
+
+    public void InitUCB1(int totalAvailableActions)
     {
-        totalActions = 0;
-        numActions = System.Enum.GetNames(typeof(RPSAction)).Length;
-        count = new int[numActions];
-        score = new float[numActions];
-        UCB1scores = new float[numActions];
-        for (int i=0; i <numActions; i++)
-        {
-            count[i] = 0;
-            score[i] = 0;
-        }
-    }
-    public RPSAction Play()
-    {
-        RPSAction result = GetNextActionUCB1();
-        sr.sprite = sprites[(int)result];
-        return result;
+        playedRounds                = 0;
+        this.totalAvailableActions  = totalAvailableActions;
+        timesPlayedByAction         = new int   [totalAvailableActions];
+        scoreByAction               = new float [totalAvailableActions];
+        UCB1scoresByAction          = new float [totalAvailableActions];
     }
 
-    private RPSAction GetNextActionUCB1()
+    public T Play()
+    {
+        return GetNextAction();
+    }
+
+    public override T GetNextAction()
     {
         int i, best;
         float bestScore;
         float tempScore;
         // Las primeras numActions veces solo va probando cada una de las acciones.
         // Sería mejor hacer un Random de todas las acciones que aún no ha probado.
-        for (i = 0; i <numActions; i++)
+        for (i = 0; i <totalAvailableActions; i++)
         {
-            if (count[i] == 0)
+            if (timesPlayedByAction[i] == 0)
             {
-                lastAction = (RPSAction)i;
+                lastAction = (T)i;
                 return lastAction;
             }
         }
         // Si ya ha probado todas las acciones entonces aplica UCB1.
         best = -1;
         bestScore = int.MinValue;
-        for(i = 0; i <numActions; i++)
+        for(i = 0; i <totalAvailableActions; i++)
         {
-            tempScore = UCB1(score[i] / count[i], count[i], totalActions);
-            UCB1scores[i] = tempScore;
+            tempScore = GetUCB1(scoreByAction[i] / timesPlayedByAction[i], timesPlayedByAction[i], playedRounds);
+            UCB1scoresByAction[i] = tempScore;
             if (tempScore > bestScore)
             {
                 best = i;
                 bestScore = tempScore;
             }
         }
-        lastAction = (RPSAction)best;
+        lastAction = (T)best;
         return lastAction;    
     }
-    private float UCB1(float averageUtility, float count, float totalActions)
+    private float GetUCB1(float averageUtility, float count, float totalActions)
     {
         return averageUtility + Mathf.Sqrt(2 + Mathf.Log10(totalActions) / count);
     }
 
-    public void TellOponentAction (RPSAction action)
+    public void TellOponentAction (T action)
     {
-        totalActions++;
+        playedRounds++;
         float utility;
         utility = GetUtility(lastAction, action);
-        score[(int)lastAction] += utility;
-        count[(int)lastAction]++;
+        scoreByAction[(int)lastAction] += utility;
+        timesPlayedByAction[(int)lastAction]++;
     }
 
-    public float GetUtility(RPSAction lastAction, RPSAction action)
+    public float GetUtility(T lastAction, T action)
     {
+         /* 
         float utility = 0;
         if (lastAction == RPSAction.Rock && action == RPSAction.Paper)
             utility--;
@@ -106,11 +94,8 @@ public class UCB1 : MonoBehaviour
         else if (lastAction == RPSAction.Scissors && action == RPSAction.Paper)
             utility++;
         return utility;
-    }
+        */
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        return 1;
     }
 }
