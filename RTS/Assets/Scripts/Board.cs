@@ -4,14 +4,31 @@ public class Board
 {
     byte rows, columns;
     Cell [,] cells;
-    Board(byte rows, byte columns)
+    static Board instance;
+
+    private Board(byte rows, byte columns)
     {
         rows    = this.rows;
         columns = this.columns;
         cells   = new Cell[rows, columns];
     }
 
+    public static Board Create(byte rows, byte columns)
+    {   
+        if(instance == null)
+        {
+            instance = new Board(rows, columns);
+        }
+
+        return instance;
+    }
+    
+    public static Board Get()
+    {
+        return instance;
+    }
     public Cell GetCellAt (byte x, byte y) { return cells [x,y];}
+    public int GetTotalCells() { return rows * columns;}
 }
 
 public struct Cell

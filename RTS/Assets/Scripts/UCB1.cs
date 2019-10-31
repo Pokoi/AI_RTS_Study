@@ -5,20 +5,14 @@ using UnityEngine;
 
 public class UCB1 <T> : AIAlgorithim <T>
 {
-    public int playedRounds;    
-    public int [] timesPlayedByAction;        
-    public float [] scoreByAction;  
-    public float [] UCB1scoresByAction; 
-    public int totalAvailableActions;   
-    public T lastAction; 
+    int          playedRounds;    
+    int     []  timesPlayedByAction;        
+    float   []  scoreByAction;  
+    float   []  UCB1scoresByAction; 
+    int          totalAvailableActions;   
+    T            lastAction; 
 
-
-    UCB1()
-    {
-        InitUCB1();
-    }
-
-    public void InitUCB1(int totalAvailableActions)
+    public UCB1(int totalAvailableActions)
     {
         playedRounds                = 0;
         this.totalAvailableActions  = totalAvailableActions;
@@ -37,6 +31,7 @@ public class UCB1 <T> : AIAlgorithim <T>
         int i, best;
         float bestScore;
         float tempScore;
+
         // Las primeras numActions veces solo va probando cada una de las acciones.
         // Sería mejor hacer un Random de todas las acciones que aún no ha probado.
         for (i = 0; i <totalAvailableActions; i++)
