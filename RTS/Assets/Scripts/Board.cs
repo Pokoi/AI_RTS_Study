@@ -27,23 +27,47 @@ public class Board
     {
         return instance;
     }
-    public Cell GetCellAt (byte x, byte y) { return cells [x,y];}
-    public int GetTotalCells() { return rows * columns;}
+    public Cell GetCellAt (byte x, byte y) 
+    { 
+        return cells [x,y];
+    }
+
+    public int GetTotalCells() 
+    { 
+        return rows * columns;
+    }
+
+    public int GetRows()
+    {
+        return this.rows;
+    }
+
+    public int GetColumns()
+    {
+        return this.columns;
+    }
 }
 
 public struct Cell
 {
     Vector2 position; 
-    Sprite  cellSprite;
 
-    public Cell (byte x, byte y, Sprite image)
+    public Cell (byte x, byte y)
     {
         this.position   = new Vector2 (x, y);
-        this.cellSprite = image;
     }
 
-    public byte GetX(){ return (byte) position.x;}
-    public byte GetY(){ return (byte) position.y;}
-    public Vector2 GetPosition() { return this.position;}
+    public byte GetX()
+    { 
+        return (byte) position.x;
+    }
+    public byte GetY()
+    { 
+        return (byte) position.y;
+    }
+    public Vector2 GetPosition() 
+    { 
+        return this.position;
+    }
     
 }
