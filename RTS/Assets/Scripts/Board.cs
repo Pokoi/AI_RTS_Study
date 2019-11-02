@@ -11,8 +11,9 @@ public class Board
         rows    = this.rows;
         columns = this.columns;
         cells   = new Cell[rows, columns];
+        
+        InitializeCells();
     }
-
     public static Board Create(byte rows, byte columns)
     {   
         if(instance == null)
@@ -27,7 +28,7 @@ public class Board
     {
         return instance;
     }
-    public Cell GetCellAt (byte x, byte y) 
+    public Cell GetCellAt (int x, int y) 
     { 
         return cells [x,y];
     }
@@ -46,9 +47,27 @@ public class Board
     {
         return this.columns;
     }
+
+    private void InitializeCells()
+    {
+        byte r, c;
+        r = c = 0;
+
+        for (int i = 0; i < cells.Length; ++i)
+        {
+            this.cells[r, c] = new Cell(r, c);
+            
+            ++c;
+            if(c == columns)
+            {
+                c = 0;
+                ++r;
+            }
+        }
+    }
 }
 
-public struct Cell
+public class Cell
 {
     Vector2 position; 
 
@@ -57,6 +76,15 @@ public struct Cell
         this.position   = new Vector2 (x, y);
     }
 
+    public static bool operator == (Cell thisCell, Cell otherCell)
+    {
+        return thisCell.GetPosition() == otherCell.GetPosition();
+    }
+
+    public static bool operator != (Cell thisCell, Cell otherCell)
+    {
+        return !(thisCell == otherCell);
+    }    
     public byte GetX()
     { 
         return (byte) position.x;

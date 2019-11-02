@@ -9,7 +9,7 @@ public class UCB1 <T> : AIAlgorithim <T> where T : Action
     int     []  timesPlayedByAction;        
     float   []  scoreByAction;  
     float   []  UCB1scoresByAction; 
-    int         totalAvailableActions;   
+    uint         totalAvailableActions;   
     T           selfLastAction;
 
     public UCB1(Actions<T> _possibleActions) : base (_possibleActions)

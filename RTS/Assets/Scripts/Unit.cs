@@ -12,6 +12,11 @@ public class Unit
         this.type       = type;
         this.position   = position;
     }
+
+    public Cell GetPosition()
+    {
+        return this.position;
+    }
 }
 
 public enum UnitType
