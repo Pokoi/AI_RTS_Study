@@ -63,11 +63,11 @@ public class UCB1 <T> : AIAlgorithim <T> where T : Action
         return averageUtility + Mathf.Sqrt(2 + Mathf.Log10(totalActions) / count);
     }
 
-    public void TellOponentAction (T action)
+    public void UpdateValues (T oponentAction)
     {
         playedRounds++;
         float utility;
-        utility = GetUtility(selfLastAction, action);
+        utility = GetUtility(selfLastAction, oponentAction);
         scoreByAction[selfLastAction.Index] += utility;
         timesPlayedByAction[selfLastAction.Index]++;
     }

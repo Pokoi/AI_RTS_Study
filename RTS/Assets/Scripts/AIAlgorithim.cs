@@ -24,7 +24,7 @@ public class AIAlgorithim <T> where T : Action
         utility[oponentAction.Index, selfAction.Index] = score;
     }
 
-    protected virtual int GetUtility(T selfAction, T oponentAction)
+    public virtual int GetUtility(T selfAction, T oponentAction)
     {
         return utility[oponentAction.Index, selfAction.Index];
     }
