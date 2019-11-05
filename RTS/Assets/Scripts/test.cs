@@ -19,5 +19,11 @@ public class test : MonoBehaviour
         
     }
 
-  
+    public void OnClick(UnitType type)
+    {
+        //DoSomething
+    }
+
+    public void OnClick()
+    {}
 }
