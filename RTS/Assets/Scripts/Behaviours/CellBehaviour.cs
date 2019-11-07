@@ -34,21 +34,22 @@ using UnityEngine;
 [RequireComponent (typeof(Collider))]
 public class CellBehaviour : MonoBehaviour
 {
-    [SerializeField]CellData cellData;
+    public static Vector3 cellSize;
+    
+    CellData cellData;
     List<Transform> visualTransforms = new List<Transform>();
     Collider cachedCollider;
 
-    public Vector3 GetColliderSize() => cachedCollider.bounds.size;
 
-    public void CellDataInitializer(int x, int y)
-    {
-        cellData = BoardData.Get().GetCellAt(x,y);
-    }
+    public void CellDataInitializer(int x, int y) => cellData = BoardData.Get().GetCellAt(x,y);
+    private Vector3 GetColliderSize() => cachedCollider.bounds.size;
+
 
     private void Awake() 
     {
         visualTransforms    = new List<Transform>();
         cachedCollider      = GetComponent<Collider>();
+        cellSize            = GetColliderSize();
     }
     
     private void OnTriggerEnter(Collider other) 

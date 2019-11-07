@@ -33,15 +33,28 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static GameController instance;
+    public BoardBehaviour   boardBehaviour;
+    public CameraBehaviour  cameraBehaviour;
+
+
+    private void Awake() 
     {
-        
+        instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start() 
     {
-        
+        Invoke("OnPlayerDecideFormation", 5f);    
+    }
+
+    public static GameController Get() => instance;
+    
+    private void OnPlayerDecideFormation()
+    {
+        // Center the camera in the player board
+        BoardData   boardData                   = BoardData.Get();
+        Vector3     playerCenterCellPosition    = boardBehaviour.GetWorldPositionOfCell(boardData.GetPlayerCellsCenterCell());
+        cameraBehaviour.CenterToPlayerCells(playerCenterCellPosition); 
     }
 }

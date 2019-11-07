@@ -40,6 +40,19 @@ public class BoardBehaviour : MonoBehaviour
     BoardData boardData;
     Transform cachedTransform;
 
+    public Vector3 GetWorldPositionOfCell(CellData cell)
+    {
+        byte    localX          = cell.GetX();
+        byte    localZ          = cell.GetY();
+        Vector3 boardPosition   = cachedTransform.position;
+        Vector3 cellSize        = CellBehaviour.cellSize;
+        
+        return new Vector3  (   localX + cellSize.x + boardPosition.x, 
+                                boardPosition.y, 
+                                localZ + cellSize.z + boardPosition.z
+                            );
+    }
+
     private void Awake() 
     {
         cachedTransform             = transform;
@@ -72,7 +85,7 @@ public class BoardBehaviour : MonoBehaviour
     {
         Vector3     boardPosition           = cachedTransform.position;
         GameObject  newCellInstance         = Instantiate(cellPrefab, boardPosition, Quaternion.identity);
-        Vector3     cellSize                = newCellInstance.GetComponent<CellBehaviour>().GetColliderSize();
+        Vector3     cellSize                = CellBehaviour.cellSize;
         Vector3     newCellInstancePosition = new Vector3   (   localX + cellSize.x + boardPosition.x, 
                                                                 boardPosition.y, 
                                                                 localZ + cellSize.z + boardPosition.z

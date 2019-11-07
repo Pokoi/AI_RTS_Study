@@ -35,79 +35,73 @@ public class BoardData
     static CellData [,] cells;
     static BoardData instance;
 
-    CellData[] playerCells;
-    CellData[] AICells;
+    static CellData playerCellsCenterCell;
+    static CellData boardCenterCell;
 
-    private BoardData(byte _rows, byte _columns)
-    {
-        rows    = _rows;
-        columns = _columns;
-        cells   = new CellData[columns, rows];
-        
-        int halfCells   = (columns * rows) >> 1;
-        playerCells     = new CellData[halfCells];
-        AICells         = new CellData[halfCells];
-
-        InitializeCells();
-    }
     public static BoardData Create(byte rows, byte columns)
     {   
         if(instance == null)
         {
             instance = new BoardData(columns, rows);
         }
-
         return instance;
     }
 
     public static BoardData Get() => instance;
-    public CellData GetCellAt(int x, int y) => cells[x, y];
 
-    public int GetTotalCells() => rows * columns;
+    public int GetRows()        => rows;
+    public int GetColumns()     => columns;
+    public int GetTotalCells()  => rows * columns;
 
-    public int GetRows() => rows;
+    public CellData GetCellAt(int x, int y)     => cells[x, y];
+    public CellData GetPlayerCellsCenterCell()  => playerCellsCenterCell;
+    public CellData GetBoardCenterCell()        => boardCenterCell;
 
-    public int GetColumns() => columns;
+    private BoardData(byte _rows, byte _columns)
+    {
+        rows    = _rows;
+        columns = _columns;
+        cells   = new CellData[columns, rows];
 
-    public CellData[] GetPlayerCells() => playerCells;
-    public CellData[] GetAICells() => AICells;
-
+        InitializeCells();
+        AssignCenterCells();
+    }
     private void InitializeCells()
     {
-        byte r, c;
-        r = c = 0;
+        byte currentRow, currentColumn;
+        currentRow = currentColumn = 0;
 
         for (int i = 0; i < cells.Length; ++i)
         {
-            cells[c, r] = new CellData(c, r);
+            cells[currentColumn, currentRow] = new CellData(currentColumn, currentRow);
             
-            ++c;
-            if(c == columns)
+            ++currentColumn;
+            if(currentColumn == columns)
             {
-                c = 0;
-                ++r;
+                currentColumn = 0;
+                ++currentRow;
             }
         }
     }
 
-    private void AssignPlayerAndAICells()
+    private void AssignCenterCells()
     {
-        int totalCells = GetTotalCells();
-        for (int index = 0; index < totalCells; ++index)
-        {
-            
-        }
+        int totalCells      = GetTotalCells();
+        int halfTotalCells  = totalCells >> 1;
+
+        boardCenterCell         = cells[halfTotalCells % rows, (halfTotalCells/rows)];
+        halfTotalCells          = halfTotalCells >> 1;
+        playerCellsCenterCell   = cells[halfTotalCells % rows, (halfTotalCells/rows)];
     }
 }
 
-[System.Serializable]
 public class CellData
 {
-    [SerializeField]Vector2 position; 
+    Vector2 index; 
 
     public CellData (byte x, byte y)
     {
-        this.position   = new Vector2 (x, y);
+        this.index   = new Vector2 (x, y);
     }
 
     public static bool operator == (CellData thisCell, CellData otherCell)
@@ -121,15 +115,15 @@ public class CellData
     }    
     public byte GetX()
     { 
-        return (byte) position.x;
+        return (byte) index.x;
     }
     public byte GetY()
     { 
-        return (byte) position.y;
+        return (byte) index.y;
     }
     public Vector2 GetPosition() 
     { 
-        return this.position;
+        return this.index;
     }
     
 }

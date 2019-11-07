@@ -33,7 +33,29 @@ using UnityEngine;
 
 public class CameraBehaviour : MonoBehaviour
 {
-    public void CenterToPlayerCells()
-    {}
+
+    Transform cachedTransform;
+
+    private void Awake() 
+    {
+        cachedTransform = transform;    
+    }
+    public void CenterToPlayerCells(Vector3 centerCellPosition)
+    {
+        Vector3 desiredPosition = new Vector3 (centerCellPosition.x, cachedTransform.position.y, cachedTransform.position.z);
+        StartCoroutine("InterpolatedMovement", desiredPosition);
+    }
+
+    IEnumerator InterpolatedMovement(Vector3 desiredPosition)
+    {
+        float alpha = 1f;
+        while ((desiredPosition - cachedTransform.position).sqrMagnitude > alpha)
+        {
+            cachedTransform.position = Vector3.Lerp(cachedTransform.position, desiredPosition, Time.deltaTime);
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    
 }
 
