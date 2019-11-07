@@ -44,9 +44,10 @@ public class BoardBehaviour : MonoBehaviour
     {
         cachedTransform             = transform;
         cachedTransform.position    = Vector3.zero;
-        boardData                   = BoardData.Create(boardRows, boardColumns);
-        InstantiateBoard();
+        boardData                   = BoardData.Create(boardColumns, boardRows);
     }
+
+    private void Start() => InstantiateBoard();
 
     private void InstantiateBoard()
     {
@@ -56,10 +57,10 @@ public class BoardBehaviour : MonoBehaviour
 
         for (int index = 0; index < totalCells; ++index)
         {
-            InstantiateCell(currentRow, currentColumn);
+            InstantiateCell(currentColumn, currentRow);
 
             ++currentColumn;
-            if(currentColumn == currentRow)
+            if(currentColumn == boardColumns)
             {
                 currentColumn = 0;
                 ++currentRow;
@@ -76,8 +77,10 @@ public class BoardBehaviour : MonoBehaviour
                                                                 boardPosition.y, 
                                                                 localZ + cellSize.z + boardPosition.z
                                                             );
+
         
         newCellInstance.transform.position  = newCellInstancePosition;
+        newCellInstance.transform.parent    = cachedTransform;
         newCellInstance.GetComponent<CellBehaviour>().CellDataInitializer(localX, localZ);
     }
 }

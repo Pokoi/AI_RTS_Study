@@ -34,14 +34,11 @@ using UnityEngine;
 [RequireComponent (typeof(Collider))]
 public class CellBehaviour : MonoBehaviour
 {
-    CellData cellData;
+    [SerializeField]CellData cellData;
     List<Transform> visualTransforms = new List<Transform>();
     Collider cachedCollider;
 
-    public Vector3 GetColliderSize()
-    {
-        return cachedCollider.bounds.size;
-    }
+    public Vector3 GetColliderSize() => cachedCollider.bounds.size;
 
     public void CellDataInitializer(int x, int y)
     {
@@ -53,19 +50,7 @@ public class CellBehaviour : MonoBehaviour
         visualTransforms    = new List<Transform>();
         cachedCollider      = GetComponent<Collider>();
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
+    
     private void OnTriggerEnter(Collider other) 
     {
         // Do something when the cell collides with something

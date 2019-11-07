@@ -31,51 +31,46 @@ using UnityEngine;
 
 public class BoardData
 {
-    byte rows = 0, columns = 0;
-    CellData [,] cells;
+    static byte rows = 0, columns = 0;
+    static CellData [,] cells;
     static BoardData instance;
 
-    private BoardData(byte rows, byte columns)
+    CellData[] playerCells;
+    CellData[] AICells;
+
+    private BoardData(byte _rows, byte _columns)
     {
-        rows    = this.rows;
-        columns = this.columns;
-        cells   = new CellData[rows, columns];
+        rows    = _rows;
+        columns = _columns;
+        cells   = new CellData[columns, rows];
         
+        int halfCells   = (columns * rows) >> 1;
+        playerCells     = new CellData[halfCells];
+        AICells         = new CellData[halfCells];
+
         InitializeCells();
     }
     public static BoardData Create(byte rows, byte columns)
     {   
         if(instance == null)
         {
-            instance = new BoardData(rows, columns);
+            instance = new BoardData(columns, rows);
         }
 
         return instance;
     }
-    
-    public static BoardData Get()
-    {
-        return instance;
-    }
-    public CellData GetCellAt (int x, int y) 
-    { 
-        return cells [x,y];
-    }
 
-    public int GetTotalCells() 
-    { 
-        return rows * columns;
-    }
+    public static BoardData Get() => instance;
+    public CellData GetCellAt(int x, int y) => cells[x, y];
 
-    public int GetRows()
-    {
-        return this.rows;
-    }
+    public int GetTotalCells() => rows * columns;
 
-    public int GetColumns()
-    {
-        return this.columns;
-    }
+    public int GetRows() => rows;
+
+    public int GetColumns() => columns;
+
+    public CellData[] GetPlayerCells() => playerCells;
+    public CellData[] GetAICells() => AICells;
 
     private void InitializeCells()
     {
@@ -84,7 +79,7 @@ public class BoardData
 
         for (int i = 0; i < cells.Length; ++i)
         {
-            this.cells[r, c] = new CellData(r, c);
+            cells[c, r] = new CellData(c, r);
             
             ++c;
             if(c == columns)
@@ -94,11 +89,21 @@ public class BoardData
             }
         }
     }
+
+    private void AssignPlayerAndAICells()
+    {
+        int totalCells = GetTotalCells();
+        for (int index = 0; index < totalCells; ++index)
+        {
+            
+        }
+    }
 }
 
+[System.Serializable]
 public class CellData
 {
-    Vector2 position; 
+    [SerializeField]Vector2 position; 
 
     public CellData (byte x, byte y)
     {
