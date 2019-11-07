@@ -38,7 +38,7 @@ public class UCB1 <T> : AIAlgorithim <T> where T : Action
     int     []  timesPlayedByAction;        
     float   []  scoreByAction;  
     float   []  UCB1scoresByAction; 
-    uint         totalAvailableActions;   
+    uint        totalAvailableActions;   
     T           selfLastAction;
 
     public UCB1(Actions<T> _possibleActions) : base (_possibleActions)
@@ -50,10 +50,7 @@ public class UCB1 <T> : AIAlgorithim <T> where T : Action
         UCB1scoresByAction          = new float [totalAvailableActions];
     }
 
-    public T Play()
-    {
-        return GetNextAction();
-    }
+    public T Play() => GetNextAction();
 
     public override T GetNextAction()
     {

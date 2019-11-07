@@ -34,9 +34,9 @@ using System.Numerics;
 
 public class Actions <T> where T : Action
 {
-    uint count;
-    int maxUnits;
-    T[] actions;
+    uint    count;
+    int     maxUnits;
+    T[]     actions;
 
     public Actions(int maxUnits)
     {
@@ -47,10 +47,7 @@ public class Actions <T> where T : Action
         CreateActions();
     }
 
-    public T GetAt(int index) 
-    { 
-        return index < count ? actions [index] : null; 
-    }
+    public T GetAt(int index) =>  index < count ? actions [index] : null; 
 
     public int GetIndex(T aA)
     {
@@ -59,10 +56,7 @@ public class Actions <T> where T : Action
         return i;
     }
 
-    public uint GetCount() 
-    { 
-        return this.count; 
-    }
+    public uint GetCount() => this.count;  
 
     private BigInteger CalculateCount()
     {
@@ -184,18 +178,8 @@ public class ArmyAction : Action
 {
     Unit[] units;
 
-    public ArmyAction(int unitsCount)
-    {
-        this.units = new Unit[unitsCount];
-    }
-
-    public ArmyAction (Unit[] units)
-    {
-        this.units = units;
-    }
-
-    public void AddUnitAt(Unit unit, int index)
-    {
-        units[index] = unit;
-    }
+    public ArmyAction(int unitsCount)           => this.units = new Unit[unitsCount];
+    public ArmyAction (Unit[] units)            =>  this.units = units;
+    public void AddUnitAt(Unit unit, int index) => units[index] = unit;
+    
 }

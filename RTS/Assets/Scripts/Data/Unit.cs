@@ -34,7 +34,7 @@ using UnityEngine;
 public class Unit 
 {
     private UnitType    type;
-    private CellData        position;
+    private CellData    position;
 
     public Unit(UnitType type, CellData position)
     {
@@ -42,10 +42,7 @@ public class Unit
         this.position   = position;
     }
 
-    public CellData GetPosition()
-    {
-        return this.position;
-    }
+    public CellData GetPosition() => this.position;
 }
 
 public enum UnitType

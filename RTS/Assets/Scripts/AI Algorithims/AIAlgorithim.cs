@@ -34,8 +34,9 @@ using UnityEngine;
 
 public class AIAlgorithim <T> where T : Action
 {
-    protected Actions<T>  possibleActions;
-    private int [,] utility;
+   
+    protected Actions<T>    possibleActions;
+    private int [,]         utility;
     
     public AIAlgorithim(Actions<T> _possibleActions)
     {
@@ -43,10 +44,7 @@ public class AIAlgorithim <T> where T : Action
         this.utility            = new int[this.possibleActions.GetCount(), this.possibleActions.GetCount()]; 
     }
 
-    public virtual T GetNextAction () 
-    {
-        return default(T);
-    }
+    public virtual T GetNextAction () => default(T);
 
     public void UpdateUtility(T selfAction, T oponentAction, int score)
     {

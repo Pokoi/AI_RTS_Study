@@ -99,31 +99,16 @@ public class CellData
 {
     Vector2 index; 
 
-    public CellData (byte x, byte y)
-    {
-        this.index   = new Vector2 (x, y);
-    }
+    public CellData (byte x, byte y)    => this.index = new Vector2 (x, y);
+    public Vector2 GetPosition()        => this.index;
+    public byte GetX()                  => (byte) index.x;
+    public byte GetY()                  => (byte) index.y;
 
     public static bool operator == (CellData thisCell, CellData otherCell)
     {
         return thisCell.GetPosition() == otherCell.GetPosition();
     }
 
-    public static bool operator != (CellData thisCell, CellData otherCell)
-    {
-        return !(thisCell == otherCell);
-    }    
-    public byte GetX()
-    { 
-        return (byte) index.x;
-    }
-    public byte GetY()
-    { 
-        return (byte) index.y;
-    }
-    public Vector2 GetPosition() 
-    { 
-        return this.index;
-    }
+    public static bool operator != (CellData thisCell, CellData otherCell) => !(thisCell == otherCell);   
     
 }

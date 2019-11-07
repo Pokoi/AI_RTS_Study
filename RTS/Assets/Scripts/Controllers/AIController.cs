@@ -33,19 +33,17 @@ using UnityEngine;
 
 public class AIController : MonoBehaviour
 {
-    [SerializeField] private int maxUnitsInTeam = 0; 
+    [SerializeField] 
+    private int         maxUnitsInTeam = 0; 
     Actions<ArmyAction> possibleActions;
-    UCB1<ArmyAction> teamFormer = null;
-    ArmyAction selfFormation; 
-    AIController instance;
+    UCB1<ArmyAction>    teamFormer = null;
+    ArmyAction          selfFormation; 
+    AIController        instance;
 
     int score;    
 
 
-    public AIController Get()
-    {
-        return instance;
-    }
+    public AIController Get() => instance;
     
     public AIController Create()
     {
@@ -78,22 +76,9 @@ public class AIController : MonoBehaviour
         teamFormer.UpdateValues(oponentFormation);
     }
 
-    AIController ()
-    {
-        possibleActions = new Actions<ArmyAction>(maxUnitsInTeam);
-    }
-    
-    
-    void ChooseFormation()
-    {
-        selfFormation = teamFormer.Play();
-    }
-
-
-    void UpdateScore (int newScore)
-    {
-        this.score += newScore;
-    }
+    AIController ()                 => possibleActions = new Actions<ArmyAction>(maxUnitsInTeam);
+    void ChooseFormation()          =>  selfFormation = teamFormer.Play();
+    void UpdateScore (int newScore) => this.score += newScore;
 
 }
 

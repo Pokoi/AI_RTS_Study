@@ -36,9 +36,9 @@ public class CellBehaviour : MonoBehaviour
 {
     public static Vector3 cellSize;
     
-    CellData cellData;
+    CellData        cellData;
     List<Transform> visualTransforms = new List<Transform>();
-    Collider cachedCollider;
+    Collider        cachedCollider;
 
 
     public void CellDataInitializer(int x, int y) => cellData = BoardData.Get().GetCellAt(x,y);

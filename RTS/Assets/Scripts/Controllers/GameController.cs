@@ -33,28 +33,29 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    public static GameController instance;
     public BoardBehaviour   boardBehaviour;
     public CameraBehaviour  cameraBehaviour;
+    static GameController instance;
 
 
-    private void Awake() 
-    {
-        instance = this;
-    }
+    public static GameController Get()  => instance;
+    private void Awake()                => instance = this; 
 
-    private void Start() 
-    {
-        Invoke("OnPlayerDecideFormation", 5f);    
-    }
-
-    public static GameController Get() => instance;
     
     private void OnPlayerDecideFormation()
     {
         // Center the camera in the player board
         BoardData   boardData                   = BoardData.Get();
         Vector3     playerCenterCellPosition    = boardBehaviour.GetWorldPositionOfCell(boardData.GetPlayerCellsCenterCell());
-        cameraBehaviour.CenterToPlayerCells(playerCenterCellPosition); 
+        cameraBehaviour.CenterToPosition(playerCenterCellPosition); 
+    }
+
+    private void OnStartBattle()
+    {
+        // Center the camera in the board
+        BoardData   boardData               = BoardData.Get();
+        Vector3     boardCenterCellPosition = boardBehaviour.GetWorldPositionOfCell(boardData.GetBoardCenterCell());
+        cameraBehaviour.CenterToPosition(boardCenterCellPosition); 
+        
     }
 }

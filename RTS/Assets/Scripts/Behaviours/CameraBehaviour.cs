@@ -40,9 +40,9 @@ public class CameraBehaviour : MonoBehaviour
     {
         cachedTransform = transform;    
     }
-    public void CenterToPlayerCells(Vector3 centerCellPosition)
+    public void CenterToPosition(Vector3 targetPosition)
     {
-        Vector3 desiredPosition = new Vector3 (centerCellPosition.x, cachedTransform.position.y, cachedTransform.position.z);
+        Vector3 desiredPosition = new Vector3 (targetPosition.x, cachedTransform.position.y, cachedTransform.position.z);
         StartCoroutine("InterpolatedMovement", desiredPosition);
     }
 
