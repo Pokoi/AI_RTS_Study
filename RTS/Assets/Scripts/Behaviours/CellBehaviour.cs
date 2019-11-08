@@ -31,28 +31,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent (typeof(Collider))]
-public class CellBehaviour : MonoBehaviour
+public class CellBehaviour
 {
     public static Vector3 cellSize;
     
     CellData        cellData;
-    List<Transform> visualTransforms = new List<Transform>();
-    Collider        cachedCollider;
+    Collider        collider;
 
-
-    public void CellDataInitializer(int x, int y) => cellData = BoardData.Get().GetCellAt(x,y);
-    private Vector3 GetColliderSize() => cachedCollider.bounds.size;
-
-
-    private void Awake() 
+    public CellBehaviour(Collider collider) 
     {
-        visualTransforms    = new List<Transform>();
-        cachedCollider      = GetComponent<Collider>();
-        cellSize            = GetColliderSize();
+        this.collider   = collider;
+        cellSize        = GetColliderSize();
     }
+    public void CellDataInitializer(int x, int y) => cellData = BoardData.Get().GetCellDataAt(x,y);
+    public CellData GetCellData() => cellData;
+    private Vector3 GetColliderSize() => collider.bounds.size;
     
-    private void OnTriggerEnter(Collider other) 
+    public void OnTriggerEnter(Collider other) 
     {
         // Do something when the cell collides with something
     }

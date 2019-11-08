@@ -87,7 +87,7 @@ public class Actions <T> where T : Action
             {
                 for(int t = 0; t < maxT; ++t)
                 {
-                    possibleUnits[x+y+t] = new Unit((UnitType)t, BoardData.Get().GetCellAt(x, y));
+                    possibleUnits[x+y+t] = new Unit((UnitType)t, BoardData.Get().GetCellDataAt(x, y));
                 }
             }
         }

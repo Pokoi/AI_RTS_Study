@@ -1385,8 +1385,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da53f46b118ab42d9ba06ec4756e5c37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardRows: 3
-  boardColumns: 2
+  boardRows: 7
+  boardColumns: 10
   cellPrefab: {fileID: 3734129685700742090, guid: 2eb9ae3cf3288416b85fea9ffd1da0d1,
     type: 3}
 --- !u!4 &1543493652

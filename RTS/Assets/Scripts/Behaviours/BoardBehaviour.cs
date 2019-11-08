@@ -94,6 +94,6 @@ public class BoardBehaviour : MonoBehaviour
         
         newCellInstance.transform.position  = newCellInstancePosition;
         newCellInstance.transform.parent    = cachedTransform;
-        newCellInstance.GetComponent<CellBehaviour>().CellDataInitializer(localX, localZ);
+        newCellInstance.GetComponent<Cell>().GetBehaviour().CellDataInitializer(localX, localZ);
     }
 }

@@ -53,7 +53,7 @@ public class BoardData
     public int GetColumns()     => columns;
     public int GetTotalCells()  => rows * columns;
 
-    public CellData GetCellAt(int x, int y)     => cells[x, y];
+    public CellData GetCellDataAt(int x, int y)     => cells[x, y];
     public CellData GetPlayerCellsCenterCell()  => playerCellsCenterCell;
     public CellData GetBoardCenterCell()        => boardCenterCell;
 
@@ -98,17 +98,34 @@ public class BoardData
 public class CellData
 {
     Vector2 index; 
+    VisibleItem visibleItem;
+    public CellData (byte x, byte y)
+    {
+        this.index          = new Vector2 (x, y);
+        this.visibleItem    = new VisibleItem();
+    }
 
-    public CellData (byte x, byte y)    => this.index = new Vector2 (x, y);
-    public Vector2 GetPosition()        => this.index;
-    public byte GetX()                  => (byte) index.x;
-    public byte GetY()                  => (byte) index.y;
+    public byte         GetX()              => (byte) index.x;
+    public byte         GetY()              => (byte) index.y;
+    public Vector2      GetPosition()       => this.index;
+    public VisibleItem  GetVisibleItem()    => this.visibleItem;
 
     public static bool operator == (CellData thisCell, CellData otherCell)
     {
         return thisCell.GetPosition() == otherCell.GetPosition();
     }
 
-    public static bool operator != (CellData thisCell, CellData otherCell) => !(thisCell == otherCell);   
+    public static bool operator != (CellData thisCell, CellData otherCell) => !(thisCell == otherCell);  
+    public static CellData operator ++(CellData thisCell)
+    {
+        BoardData boardData = BoardData.Get();
+        int columns = boardData.GetColumns();
+        int rows    = boardData.GetRows();
+ 
+        int newX    = thisCell.GetX() + 1 < columns ? thisCell.GetX() + 1: 0;
+        int newY    = thisCell.GetY() + 1 < rows ? thisCell.GetY() + 1: 0;;
+
+        return boardData.GetCellDataAt(newX, newY);
+    } 
     
 }

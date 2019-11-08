@@ -41,13 +41,27 @@ public class GameController : MonoBehaviour
     public static GameController Get()  => instance;
     private void Awake()                => instance = this; 
 
-    
+    private void Start() {
+        Invoke("OnPlayerDecideFormation", 3);
+        Invoke("OnStartBattle", 6);
+    }
     private void OnPlayerDecideFormation()
     {
         // Center the camera in the player board
         BoardData   boardData                   = BoardData.Get();
         Vector3     playerCenterCellPosition    = boardBehaviour.GetWorldPositionOfCell(boardData.GetPlayerCellsCenterCell());
         cameraBehaviour.CenterToPosition(playerCenterCellPosition); 
+
+        // Hide all cells but player's
+        int maxColumns  = boardData.GetColumns();
+        int maxRows     = boardData.GetRows();
+        CellData firstNonPlayerCell = boardData.GetBoardCenterCell();
+        CellData lastCellOnBoard    = boardData.GetCellDataAt(maxColumns-1, maxRows-1);
+        
+        for(CellData index = firstNonPlayerCell; index != lastCellOnBoard; index++)
+        {
+            index.GetVisibleItem().Hide();
+        }
     }
 
     private void OnStartBattle()
@@ -56,6 +70,17 @@ public class GameController : MonoBehaviour
         BoardData   boardData               = BoardData.Get();
         Vector3     boardCenterCellPosition = boardBehaviour.GetWorldPositionOfCell(boardData.GetBoardCenterCell());
         cameraBehaviour.CenterToPosition(boardCenterCellPosition); 
+
+        // Show the hiden cells
+        int maxColumns  = boardData.GetColumns();
+        int maxRows     = boardData.GetRows();
+        CellData firstNonPlayerCell = boardData.GetBoardCenterCell();
+        CellData lastCellOnBoard    = boardData.GetCellDataAt(maxColumns-1, maxRows-1);
+        
+        for(CellData index = firstNonPlayerCell; index != lastCellOnBoard; index++)
+        {
+            index.GetVisibleItem().Show();
+        }
         
     }
 }
