@@ -1,6 +1,6 @@
 ﻿/*
- * File: PlayerController.cs
- * File Created: Monday, 4th November 2019 5:38:24 pm
+ * File: Unit.cs
+ * File Created: Tuesday, 29th October 2019 4:12:30 pm
  * ––––––––––––––––––––––––
  * Author: Jesus Fermin, 'Pokoi', Villar  (hello@pokoidev.com)
  * ––––––––––––––––––––––––
@@ -31,27 +31,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController
+public class UnitData 
 {
-    int score;
-    int choosenUnitsCount;
-    static PlayerController instance;
-    
-    public static PlayerController Get()    => instance;
-    public void UpdateScore(int score)      => this.score += score;
-    private PlayerController()              => this.score = 0;
+    private UnitType    type;
+    private CellData    position;
+    private UnitBehaviour behaviour;
 
-    public PlayerController Create()
+    public UnitData(UnitType type, CellData position)
     {
-        if(instance == null)
-        {
-            instance = new PlayerController();
-        }
+        this.type       = type;
+        this.position   = position;
 
-        return instance;
+        switch (this.type)
+        {
+            case UnitType.melee:
+                behaviour = new MeleeSoldier();
+            break;
+            case UnitType.ranged:
+                behaviour = new RangedSoldier();
+            break;
+            case UnitType.tank:
+                behaviour = new TankSoldier();
+            break;
+            case UnitType.healer:
+                behaviour = new HealerSoldier();
+            break;
+        }
     }
 
-    public void UpdateChoosenUnits(int value) => choosenUnitsCount += value;
-    public int GetChoosenUnitsCount() => choosenUnitsCount;
-
+    public CellData GetPosition() => this.position;
+    public void SetPosition(CellData position) => this.position = position;
+    public UnitBehaviour GetBehaviour() => this.behaviour;
+    public void SetUnitBehaviour (UnitBehaviour behaviour) => this.behaviour = behaviour;
 }
+
+public enum UnitType
+{
+    ranged, melee, tank, healer
+}
+
+

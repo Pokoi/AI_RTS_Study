@@ -1,6 +1,6 @@
 ﻿/*
- * File: PlayerController.cs
- * File Created: Monday, 4th November 2019 5:38:24 pm
+ * File: UnitBehaviour.cs
+ * File Created: Friday, 8th November 2019 8:52:04 pm
  * ––––––––––––––––––––––––
  * Author: Jesus Fermin, 'Pokoi', Villar  (hello@pokoidev.com)
  * ––––––––––––––––––––––––
@@ -31,27 +31,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController
+public abstract class UnitBehaviour
 {
-    int score;
-    int choosenUnitsCount;
-    static PlayerController instance;
-    
-    public static PlayerController Get()    => instance;
-    public void UpdateScore(int score)      => this.score += score;
-    private PlayerController()              => this.score = 0;
+    protected int health;
+    protected int damage;
+    protected int actionSpeed;
 
-    public PlayerController Create()
-    {
-        if(instance == null)
-        {
-            instance = new PlayerController();
-        }
 
-        return instance;
-    }
-
-    public void UpdateChoosenUnits(int value) => choosenUnitsCount += value;
-    public int GetChoosenUnitsCount() => choosenUnitsCount;
+    public abstract void Attack();
+    public abstract void GetDamage();
 
 }

@@ -44,6 +44,7 @@ public class AIController : MonoBehaviour
 
 
     public AIController Get() => instance;
+    public int GetMaxUnitsInTeam() => maxUnitsInTeam;
     
     public AIController Create()
     {

@@ -1,6 +1,6 @@
 ﻿/*
- * File: PlayerController.cs
- * File Created: Monday, 4th November 2019 5:38:24 pm
+ * File: UnitsPool.cs
+ * File Created: Friday, 8th November 2019 3:52:39 pm
  * ––––––––––––––––––––––––
  * Author: Jesus Fermin, 'Pokoi', Villar  (hello@pokoidev.com)
  * ––––––––––––––––––––––––
@@ -31,27 +31,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController
+public class UnitsPool 
 {
-    int score;
-    int choosenUnitsCount;
-    static PlayerController instance;
-    
-    public static PlayerController Get()    => instance;
-    public void UpdateScore(int score)      => this.score += score;
-    private PlayerController()              => this.score = 0;
-
-    public PlayerController Create()
+    public GameObject tankPrefab, rangedPrefab, meleePrefab, healerPrefab;
+    List<GameObject> units;
+   
+   public UnitsPool
+    (
+       int maxUnitsCount, 
+       GameObject meleePrefab,
+       GameObject rangedPrefab, 
+       GameObject healerPrefab, 
+       GameObject tankPrefab
+    )
     {
-        if(instance == null)
-        {
-            instance = new PlayerController();
-        }
+        this.meleePrefab = meleePrefab;
+        this.rangedPrefab = rangedPrefab;
+        this.healerPrefab = healerPrefab;
+        this.tankPrefab = tankPrefab;
+        units = new List<GameObject>();
+        FillPool(maxUnitsCount);
 
-        return instance;
     }
 
-    public void UpdateChoosenUnits(int value) => choosenUnitsCount += value;
-    public int GetChoosenUnitsCount() => choosenUnitsCount;
+   void FillPool(int maxUnitsCount)
+   {
+       int maxT = System.Enum.GetNames(typeof(UnitType)).Length;
+       
+       for(int t = 0; t < maxT; ++t)
+       {
+           for(int i = 0; i < maxUnitsCount; ++i)
+           {
+               UnitData unitData = new UnitData((UnitType)t, null); 
+           }
 
+       }
+                
+   }
 }

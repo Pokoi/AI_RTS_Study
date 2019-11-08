@@ -37,11 +37,19 @@ public class GameController : MonoBehaviour
     public CameraBehaviour  cameraBehaviour;
     static GameController instance;
 
+    private UnitsPool unitsPool;
+    private AIController aiController;
+    private PlayerController playerController;
 
     public static GameController Get()  => instance;
-    private void Awake()                => instance = this; 
+    private void Awake() 
+    {
+        instance = this; 
+        unitsPool = new UnitsPool(aiController.Get().GetMaxUnitsInTeam());
+    }
 
-    private void Start() {
+    private void Start() 
+    {
         Invoke("OnPlayerDecideFormation", 3);
         Invoke("OnStartBattle", 6);
     }
@@ -64,6 +72,7 @@ public class GameController : MonoBehaviour
             ++firstNonPlayerCell;
         }
         lastCellOnBoard.GetVisibleItem().Hide();
+
         
     }
 

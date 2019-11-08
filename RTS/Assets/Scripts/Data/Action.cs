@@ -69,17 +69,17 @@ public class Actions <T> where T : Action
 
     private void CreateActions()
     { 
-        Unit [] possibleUnits = CreatePossibleUnits();
+        UnitData [] possibleUnits = CreatePossibleUnits();
         InitializeActions(possibleUnits, maxUnits);
     }
 
-    private Unit[] CreatePossibleUnits()
+    private UnitData[] CreatePossibleUnits()
     {
         int maxX = BoardData.Get().GetRows();
         int maxY = BoardData.Get().GetColumns();
         int maxT = System.Enum.GetNames(typeof(UnitType)).Length;
 
-        Unit [] possibleUnits = new Unit[maxX * maxY * maxT];
+        UnitData [] possibleUnits = new UnitData[maxX * maxY * maxT];
 
         for (int x = 0; x < maxX; ++x)
         {
@@ -87,19 +87,19 @@ public class Actions <T> where T : Action
             {
                 for(int t = 0; t < maxT; ++t)
                 {
-                    possibleUnits[x+y+t] = new Unit((UnitType)t, BoardData.Get().GetCellDataAt(x, y));
+                    possibleUnits[x+y+t] = new UnitData((UnitType)t, BoardData.Get().GetCellDataAt(x, y));
                 }
             }
         }
 
         return possibleUnits;
     }
-    private void InitializeActions(Unit[] array, int m)
+    private void InitializeActions(UnitData[] array, int m)
     {
-        Unit [] result  = new Unit [m];
+        UnitData [] result  = new UnitData [m];
         int     index   = 0;
 
-        foreach (Unit[] u in UnitCombinations (m, array))
+        foreach (UnitData[] u in UnitCombinations (m, array))
         {
             for (int i = 0; i < m; ++i)
             {
@@ -114,9 +114,9 @@ public class Actions <T> where T : Action
         }
     }
 
-    IEnumerable <Unit []> UnitCombinations  (int size, Unit[] n)
+    IEnumerable <UnitData []> UnitCombinations  (int size, UnitData[] n)
     {
-        Unit [] result      = new Unit [size];
+        UnitData [] result      = new UnitData [size];
         Stack<int> stack    = new Stack<int>(size);
         stack.Push(0);
 
@@ -130,7 +130,7 @@ public class Actions <T> where T : Action
                 result[index++] = n[valueIndex++];
                 stack.Push(valueIndex);
                 if(index != size) continue;
-                yield return result.Clone() as Unit[];
+                yield return result.Clone() as UnitData[];
                 break;
             }
         }
@@ -146,7 +146,7 @@ public class Actions <T> where T : Action
         return result;
     }
 
-    private bool HaveDifferentPossitions(Unit[] u)
+    private bool HaveDifferentPossitions(UnitData[] u)
     {
         for(int i = 0; i < (u.Length - 1); ++i)
         {
@@ -176,10 +176,10 @@ public class Action
 
 public class ArmyAction : Action 
 {
-    Unit[] units;
+    UnitData[] units;
 
-    public ArmyAction(int unitsCount)           => this.units = new Unit[unitsCount];
-    public ArmyAction (Unit[] units)            =>  this.units = units;
-    public void AddUnitAt(Unit unit, int index) => units[index] = unit;
+    public ArmyAction(int unitsCount)           => this.units = new UnitData[unitsCount];
+    public ArmyAction (UnitData[] units)            =>  this.units = units;
+    public void AddUnitAt(UnitData unit, int index) => units[index] = unit;
     
 }

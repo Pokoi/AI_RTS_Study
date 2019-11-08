@@ -1,6 +1,6 @@
 ﻿/*
- * File: Unit.cs
- * File Created: Tuesday, 29th October 2019 4:12:30 pm
+ * File: RangedSoldier.cs
+ * File Created: Friday, 8th November 2019 8:15:31 pm
  * ––––––––––––––––––––––––
  * Author: Jesus Fermin, 'Pokoi', Villar  (hello@pokoidev.com)
  * ––––––––––––––––––––––––
@@ -31,23 +31,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit 
+public class RangedSoldier : UnitBehaviour
 {
-    private UnitType    type;
-    private CellData    position;
-
-    public Unit(UnitType type, CellData position)
+    public override void Attack()
     {
-        this.type       = type;
-        this.position   = position;
+        throw new System.NotImplementedException();
     }
 
-    public CellData GetPosition() => this.position;
+    public override void GetDamage()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public RangedSoldier()
+    {
+        this.health = 20;
+        this.damage = 15;
+        this.actionSpeed = 8;
+    }
+
 }
-
-public enum UnitType
-{
-    ranged, melee, flyer, ninja
-}
-
-

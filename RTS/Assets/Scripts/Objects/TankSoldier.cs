@@ -1,6 +1,6 @@
 ﻿/*
- * File: PlayerController.cs
- * File Created: Monday, 4th November 2019 5:38:24 pm
+ * File: TankSoldier.cs
+ * File Created: Friday, 8th November 2019 8:15:50 pm
  * ––––––––––––––––––––––––
  * Author: Jesus Fermin, 'Pokoi', Villar  (hello@pokoidev.com)
  * ––––––––––––––––––––––––
@@ -31,27 +31,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController
+public class TankSoldier : UnitBehaviour
 {
-    int score;
-    int choosenUnitsCount;
-    static PlayerController instance;
-    
-    public static PlayerController Get()    => instance;
-    public void UpdateScore(int score)      => this.score += score;
-    private PlayerController()              => this.score = 0;
-
-    public PlayerController Create()
+    public override void Attack()
     {
-        if(instance == null)
-        {
-            instance = new PlayerController();
-        }
-
-        return instance;
+        throw new System.NotImplementedException();
     }
 
-    public void UpdateChoosenUnits(int value) => choosenUnitsCount += value;
-    public int GetChoosenUnitsCount() => choosenUnitsCount;
+    public override void GetDamage()
+    {
+        throw new System.NotImplementedException();
+    }
 
+    public TankSoldier()
+    {
+        this.health = 100;
+        this.damage = 3;
+        this.actionSpeed = 2;
+    }
 }
