@@ -58,10 +58,13 @@ public class GameController : MonoBehaviour
         CellData firstNonPlayerCell = boardData.GetBoardCenterCell();
         CellData lastCellOnBoard    = boardData.GetCellDataAt(maxColumns-1, maxRows-1);
         
-        for(CellData index = firstNonPlayerCell; index != lastCellOnBoard; index++)
+        while(firstNonPlayerCell != lastCellOnBoard)
         {
-            index.GetVisibleItem().Hide();
+            firstNonPlayerCell.GetVisibleItem().Hide();
+            ++firstNonPlayerCell;
         }
+        lastCellOnBoard.GetVisibleItem().Hide();
+        
     }
 
     private void OnStartBattle()
@@ -77,10 +80,12 @@ public class GameController : MonoBehaviour
         CellData firstNonPlayerCell = boardData.GetBoardCenterCell();
         CellData lastCellOnBoard    = boardData.GetCellDataAt(maxColumns-1, maxRows-1);
         
-        for(CellData index = firstNonPlayerCell; index != lastCellOnBoard; index++)
+         while(firstNonPlayerCell != lastCellOnBoard)
         {
-            index.GetVisibleItem().Show();
+            firstNonPlayerCell.GetVisibleItem().Show();
+            ++firstNonPlayerCell;
         }
+        lastCellOnBoard.GetVisibleItem().Show();
         
     }
 }

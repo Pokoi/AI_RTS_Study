@@ -86,12 +86,8 @@ public class BoardData
 
     private void AssignCenterCells()
     {
-        int totalCells      = GetTotalCells();
-        int halfTotalCells  = totalCells >> 1;
-
-        boardCenterCell         = cells[halfTotalCells % rows, (halfTotalCells/rows)];
-        halfTotalCells          = halfTotalCells >> 1;
-        playerCellsCenterCell   = cells[halfTotalCells % rows, (halfTotalCells/rows)];
+        boardCenterCell         = cells[columns >> 1, rows >> 1];
+        playerCellsCenterCell   = cells[columns >> 2, rows >> 21];
     }
 }
 
@@ -121,9 +117,15 @@ public class CellData
         BoardData boardData = BoardData.Get();
         int columns = boardData.GetColumns();
         int rows    = boardData.GetRows();
- 
-        int newX    = thisCell.GetX() + 1 < columns ? thisCell.GetX() + 1: 0;
-        int newY    = thisCell.GetY() + 1 < rows ? thisCell.GetY() + 1: 0;;
+        int newX    = thisCell.GetX();
+        int newY    = thisCell.GetY();
+
+        ++newY;
+        if(newY == rows)
+        {
+            newY = 0;
+            ++newX;
+        }
 
         return boardData.GetCellDataAt(newX, newY);
     } 

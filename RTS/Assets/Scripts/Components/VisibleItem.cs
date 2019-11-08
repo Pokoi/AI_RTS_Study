@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VisibleItem : MonoBehaviour
+public class VisibleItem
 {
     List<Transform> visualTransforms = new List<Transform>();
-    float maxAparitionSpeed = 20f;
-    float minAparitionSpeed = 2f;
+    float maxAparitionSpeed = 10f;
+    float minAparitionSpeed = 0.5f;
 
     public VisibleItem() => visualTransforms = new List<Transform>();
 
@@ -25,12 +25,10 @@ public class VisibleItem : MonoBehaviour
 
         foreach (Transform t in this.visualTransforms)
         {
-            Vector3 desiredPosition = t.position;
-            t.position = new Vector3 (t.position.x, t.position.y + 50, t.position.z);
-
-            StartCoroutine(InterpolatedMovement(desiredPosition, t, lastSpeed));
-            lastSpeed = Random.Range(lastSpeed, minAparitionSpeed);
-
+            Vector3 desiredPosition = t.localPosition;
+            t.localPosition = new Vector3 (t.localPosition.x, t.localPosition.y - 100, t.localPosition.z);
+            t.GetComponent<SpriteRenderer>().enabled = true;
+            GameController.Get().StartCoroutine(this.InterpolatedMovement(desiredPosition, t, lastSpeed));
         }
     }
 
@@ -39,7 +37,7 @@ public class VisibleItem : MonoBehaviour
         float alpha = 1f;
         while ((desiredPosition - transformToMove.position).sqrMagnitude > alpha)
         {
-            transformToMove.position = Vector3.Lerp(transformToMove.position, desiredPosition, Time.deltaTime * speed);
+            transformToMove.localPosition = Vector3.Lerp(transformToMove.localPosition, desiredPosition, Time.deltaTime * speed);
             yield return new WaitForEndOfFrame();
         }
     }
