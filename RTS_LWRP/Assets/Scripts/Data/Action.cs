@@ -75,7 +75,7 @@ public class Actions <T> where T : Action
 
     private Unit[] CreatePossibleUnits()
     {
-        int maxX = BoardData.Get().GetColumns();
+        int maxX = BoardData.Get().GetColumns() >> 1;
         int maxY = BoardData.Get().GetRows();
         int maxT = System.Enum.GetNames(typeof(UnitType)).Length;
 

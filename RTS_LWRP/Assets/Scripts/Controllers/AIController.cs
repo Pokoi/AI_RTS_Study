@@ -35,7 +35,7 @@ public class AIController : MonoBehaviour
 {
     [SerializeField] 
     private int         maxUnitsInTeam; 
-    Actions<ArmyAction> possibleActions;
+     Actions<ArmyAction> possibleActions;
     UCB1<ArmyAction>    teamFormer = null;
     ArmyAction          selfFormation; 
     AIController        instance;
