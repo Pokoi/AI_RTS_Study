@@ -84,8 +84,15 @@ public class AIController : MonoBehaviour
         possibleActions = new Actions<ArmyAction>(maxUnitsInTeam);
         teamFormer      = new UCB1<ArmyAction>(possibleActions);
         teamFormer2     = new RegretMatching<ArmyAction>(possibleActions);
+
+        ChooseFormation();
     }
-    void ChooseFormation()          =>  selfFormation = teamFormer.Play();
+    void ChooseFormation()
+    {
+     selfFormation = teamFormer.Play();
+     selfFormation2 = teamFormer2.Play();
+
+    }
     void UpdateScore (int newScore) => this.score += newScore;
 
 }
