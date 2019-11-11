@@ -31,17 +31,68 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RegretMatching : MonoBehaviour
+public class RegretMatching <T> : AIAlgorithim <T> where T : Action
 {
-    // Start is called before the first frame update
-    void Start()
+    float initial_regret = 10f;
+    public float[] regret;
+    public float[] chance;
+    public T last_action;
+    public uint num_actions;
+
+    public RegretMatching(Actions<T> _possibleActions) : base (_possibleActions)
     {
-        
+        num_actions = _possibleActions.GetCount();
+        regret      = new float[num_actions];
+        chance      = new float[num_actions];
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public T Play() => GetNextAction();
+
+    public override T GetNextAction()
     {
-        
+        float sum = 0;
+        float prob = 0f;
+
+        for (int i = 0; i < num_actions; ++i)
+        {
+            if (regret[i] > 0f) sum += regret[i];
+        }
+
+        if (sum <= 0)
+        {
+            last_action = possibleActions.GetAt((int)UnityEngine.Random.Range(0, num_actions));
+        }
+        else
+        {
+            for (int i = 0; i < num_actions; ++i)
+            {
+                chance[i] = 0;
+                if (regret[i] > 0f) chance[i] = regret[i];
+                if (i > 0) chance[i] += chance[i - 1];
+            }
+            if (chance[num_actions - 1] > 0)
+            {
+                prob = UnityEngine.Random.Range(0, chance[num_actions - 1]);
+                for (int i = 0; i < num_actions; ++i)
+                {
+                    if (prob < chance[i])
+                    {
+                        last_action = possibleActions.GetAt(i);
+                    }
+                }
+            }
+        }
+        return last_action;
     }
+
+    public void UpdateValues(T oponentAction)
+    {
+        for (int i = 0; i < num_actions; ++i)
+        {
+            regret[i] += GetUtility(possibleActions.GetAt(i), oponentAction);
+            regret[i] -= GetUtility(last_action, oponentAction);
+        }
+    }
+
 }

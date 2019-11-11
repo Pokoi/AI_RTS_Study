@@ -35,7 +35,7 @@ using UnityEngine;
 public class AIAlgorithim <T> where T : Action
 {
    
-    protected Actions<T>    possibleActions;
+    public Actions<T>    possibleActions;
     private int [,]         utility;
     
     public AIAlgorithim(Actions<T> _possibleActions)

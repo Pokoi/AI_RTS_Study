@@ -35,9 +35,11 @@ public class AIController : MonoBehaviour
 {
     [SerializeField] 
     private int         maxUnitsInTeam; 
-     Actions<ArmyAction> possibleActions;
+    Actions<ArmyAction> possibleActions;
     UCB1<ArmyAction>    teamFormer = null;
+    RegretMatching<ArmyAction> teamFormer2 = null;
     ArmyAction          selfFormation; 
+    ArmyAction selfFormation2;
     AIController        instance;
 
     int score;    
@@ -77,7 +79,12 @@ public class AIController : MonoBehaviour
         teamFormer.UpdateValues(oponentFormation);
     }
 
-    void Start()                          => possibleActions = new Actions<ArmyAction>(maxUnitsInTeam);
+    void Start() 
+    {
+        possibleActions = new Actions<ArmyAction>(maxUnitsInTeam);
+        teamFormer      = new UCB1<ArmyAction>(possibleActions);
+        teamFormer2     = new RegretMatching<ArmyAction>(possibleActions);
+    }
     void ChooseFormation()          =>  selfFormation = teamFormer.Play();
     void UpdateScore (int newScore) => this.score += newScore;
 

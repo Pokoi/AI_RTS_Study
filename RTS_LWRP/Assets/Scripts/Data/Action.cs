@@ -60,7 +60,7 @@ public class Actions <T> where T : Action
 
     private BigInteger CalculateCount()
     {
-        uint size        = (uint) BoardData.Get().GetTotalCells();
+        uint size        = (uint) BoardData.Get().GetTotalCells() >> 1;
         uint typesCount  = (uint) System.Enum.GetNames(typeof(UnitType)).Length;
         uint n           = size * typesCount; 
 
