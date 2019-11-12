@@ -206,4 +206,5 @@ public class ArmyAction : Action
     public ArmyAction (Unit[] units)            =>  this.units = units;
     public void AddUnitAt(Unit unit, int index) => units[index] = unit;
     
+    public Unit[] GetUnits() => units;
 }

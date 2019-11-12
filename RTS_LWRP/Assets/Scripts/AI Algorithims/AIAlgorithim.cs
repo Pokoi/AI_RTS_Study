@@ -36,22 +36,22 @@ public class AIAlgorithim <T> where T : Action
 {
    
     public Actions<T>    possibleActions;
-    private int [,]         utility;
+    private byte [,]         utility;
     
     public AIAlgorithim(Actions<T> _possibleActions)
     {
         this.possibleActions    = _possibleActions;
-        this.utility            = new int[this.possibleActions.GetCount(), this.possibleActions.GetCount()]; 
+        this.utility            = new byte[this.possibleActions.GetCount(), this.possibleActions.GetCount()]; 
     }
 
     public virtual T GetNextAction () => default(T);
 
     public void UpdateUtility(T selfAction, T oponentAction, int score)
     {
-        utility[oponentAction.Index, selfAction.Index] = score;
+        utility[oponentAction.Index, selfAction.Index] = (byte)score;
     }
 
-    public virtual int GetUtility(T selfAction, T oponentAction)
+    public virtual byte GetUtility(T selfAction, T oponentAction)
     {
         return utility[oponentAction.Index, selfAction.Index];
     }

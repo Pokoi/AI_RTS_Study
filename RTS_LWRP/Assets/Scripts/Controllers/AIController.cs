@@ -36,10 +36,10 @@ public class AIController : MonoBehaviour
     [SerializeField] 
     private int         maxUnitsInTeam; 
     Actions<ArmyAction> possibleActions;
-    UCB1<ArmyAction>    teamFormer = null;
-    RegretMatching<ArmyAction> teamFormer2 = null;
-    ArmyAction          selfFormation; 
-    ArmyAction selfFormation2;
+    UCB1<ArmyAction>    teamFormerUCB1 = null;
+    RegretMatching<ArmyAction> teamFormerRM = null;
+    ArmyAction          selfFormationUCB1; 
+    ArmyAction          selfFormationRM;
     AIController        instance;
 
     int score;    
@@ -60,8 +60,8 @@ public class AIController : MonoBehaviour
     
     public void OnBattleEnd(ArmyAction oponentFormation, int score)
     {
-        teamFormer.UpdateUtility(selfFormation, oponentFormation, score);
-        int utility = teamFormer.GetUtility(selfFormation, oponentFormation);
+        teamFormerUCB1.UpdateUtility(selfFormationUCB1, oponentFormation, score);
+        int utility = teamFormerUCB1.GetUtility(selfFormationUCB1, oponentFormation);
 
         if (utility < 0)
         {
@@ -76,24 +76,39 @@ public class AIController : MonoBehaviour
             PlayerController.Get().UpdateScore(utility);
         }
         
-        teamFormer.UpdateValues(oponentFormation);
+        teamFormerUCB1.UpdateValues(oponentFormation);
+        teamFormerRM.UpdateValues(oponentFormation);
+    }
+
+    public void InterpreateFormation(ArmyAction formation)
+    {
+        foreach (Unit unit in formation.GetUnits())
+        {
+            //Get the position
+
+            //In base of the type get a unit from the pool
+
+            //Set the unit in the position
+        }
     }
 
     void Start() 
     {
         possibleActions = new Actions<ArmyAction>(maxUnitsInTeam);
-        teamFormer      = new UCB1<ArmyAction>(possibleActions);
-        teamFormer2     = new RegretMatching<ArmyAction>(possibleActions);
+        teamFormerUCB1      = new UCB1<ArmyAction>(possibleActions);
+        teamFormerRM     = new RegretMatching<ArmyAction>(possibleActions);
 
         ChooseFormation();
     }
     void ChooseFormation()
     {
-     selfFormation = teamFormer.Play();
-     selfFormation2 = teamFormer2.Play();
+     selfFormationUCB1 = teamFormerUCB1.Play();
+     selfFormationRM = teamFormerRM.Play();
 
     }
     void UpdateScore (int newScore) => this.score += newScore;
+
+
 
 }
 
