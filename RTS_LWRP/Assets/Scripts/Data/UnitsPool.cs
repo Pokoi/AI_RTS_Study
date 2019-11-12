@@ -41,6 +41,28 @@ public class UnitsPool : MonoBehaviour
     int maxUnitsCount;
    
     public void SetMaxUnitsCount(int maxUnitsCount) => this.maxUnitsCount = maxUnitsCount;
+    public GameObject GetUnitInstance(UnitType unitType)
+    {
+        GameObject to_return = null;
+         
+        switch(unitType)
+        {
+            case UnitType.ranged:
+            to_return = GetFromPool(rangedUnits);
+            break;
+            case UnitType.melee:
+            to_return = GetFromPool(meleeUnits);
+            break;
+            case UnitType.healer:
+            to_return = GetFromPool(healerUnits);
+            break;
+            case UnitType.tank:
+            to_return = GetFromPool(tankUnits);
+            break;
+        }
+
+        return to_return;
+    }
     private void Awake() 
     {
         meleeUnits  = new List<GameObject>(); 
@@ -62,11 +84,19 @@ public class UnitsPool : MonoBehaviour
         {
             for(int i = 0; i < maxUnitsCount << 1; ++i)
             {
-
                 UnitData unitData = new UnitData((UnitType)t, null); 
             }
 
+        }               
+    }
+
+    GameObject GetFromPool(List<GameObject> pool)
+    {
+        foreach(GameObject go in pool)
+        {
+            if (!go.activeSelf) return go;
         }
-                    
+
+        return null;
     }
 }

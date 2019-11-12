@@ -42,7 +42,7 @@ public class GameController : MonoBehaviour
     static GameController   instance;
 
     public static GameController Get()  => instance;
-    
+
     private void Awake() 
     {
         instance = this;
