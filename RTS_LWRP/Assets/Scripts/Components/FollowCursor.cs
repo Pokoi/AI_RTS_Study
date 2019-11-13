@@ -8,28 +8,36 @@ public class FollowCursor
     Transform transformToMove;
     float movementSpeed = 2.6f;
 
-    public FollowCursor(Transform transformToMove) => this.transformToMove = transformToMove;
+    LayerMask layerMask;
+
+    public FollowCursor(Transform transformToMove, LayerMask layerMask) 
+    {
+        this.transformToMove    = transformToMove;
+        this.layerMask          = layerMask;
+    }
 
     public void StartMoving()
     {
-        GameController.Get().StartCoroutine(UpdatePosition());
         this.following = true;
+        GameController.Get().StartCoroutine(this.UpdatePosition());
     }
 
     public void StopMoving()
     {
-        GameController.Get().StopCoroutine(UpdatePosition());
         this.following = false;
+        GameController.Get().StopCoroutine(this.UpdatePosition());
     }
+
+    public bool GetFollowing() => following;
 
     IEnumerator UpdatePosition()
     {
-        while(true)
+        while(following)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            if(Physics.Raycast(ray, out hit))
+            if(Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
             {
                 transformToMove.position = Vector3.Slerp(transformToMove.position, hit.point, Time.deltaTime * movementSpeed);
             }

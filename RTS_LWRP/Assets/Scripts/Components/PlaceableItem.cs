@@ -34,6 +34,8 @@ using UnityEngine;
 public class PlaceableItem : MonoBehaviour
 {
     FollowCursor followCursorComponent;
+    public LayerMask layerMask;
+    Cell lastCellCollidedWith;
     private void Start()
     {
         AddFollowCursorComponent();    
@@ -42,11 +44,42 @@ public class PlaceableItem : MonoBehaviour
     {
         if(this.followCursorComponent == null)
         {
-            this.followCursorComponent = new FollowCursor(transform);
+            this.followCursorComponent = new FollowCursor(transform, layerMask);
         }
 
-        this.followCursorComponent.StartMoving();
-
+        DragPlaceable();
     }
-  
+
+    private void Update() 
+    {
+        if(Input.GetMouseButtonDown(0) && followCursorComponent.GetFollowing())
+        {
+            DropPlaceable();
+        }
+    }
+
+    private void OnTriggerEnter(Collider other) 
+    {
+        Cell otherCell = other.GetComponent<Cell>();
+        if(otherCell)
+        {
+            this.lastCellCollidedWith = otherCell;
+        }
+    }
+
+    private void DropPlaceable()
+    {
+        if(lastCellCollidedWith)
+        {
+            transform.position  = lastCellCollidedWith.transform.position;
+            this.followCursorComponent.StopMoving();
+        }
+    }
+
+    private void DragPlaceable()
+    {
+        this.followCursorComponent.StartMoving();
+    }
+    
+    
 }
