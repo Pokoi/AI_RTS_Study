@@ -129,5 +129,23 @@ public class CellData
 
         return boardData.GetCellDataAt(newX, newY);
     } 
+
+    public static CellData operator --(CellData thisCell)
+    {
+        BoardData boardData = BoardData.Get();
+        int columns = boardData.GetColumns();
+        int rows    = boardData.GetRows();
+        int newX    = thisCell.GetX();
+        int newY    = thisCell.GetY();
+
+        --newY;
+        if(newY < 0)
+        {
+            newY = rows - 1;
+            --newX;
+        }
+
+        return boardData.GetCellDataAt(newX, newY);
+    }
     
 }

@@ -33,7 +33,20 @@ using UnityEngine;
 
 public class PlaceableItem : MonoBehaviour
 {
-  
+    FollowCursor followCursorComponent;
+    private void Start()
+    {
+        AddFollowCursorComponent();    
+    }
+    public void AddFollowCursorComponent()
+    {
+        if(this.followCursorComponent == null)
+        {
+            this.followCursorComponent = new FollowCursor(transform);
+        }
 
+        this.followCursorComponent.StartMoving();
+
+    }
   
 }

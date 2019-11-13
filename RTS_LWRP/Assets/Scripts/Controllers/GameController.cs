@@ -62,17 +62,7 @@ public class GameController : MonoBehaviour
         cameraBehaviour.CenterToPosition(playerCenterCellPosition); 
 
         // Hide all cells but player's
-        int maxColumns  = boardData.GetColumns();
-        int maxRows     = boardData.GetRows();
-        CellData firstNonPlayerCell = boardData.GetBoardCenterCell();
-        CellData lastCellOnBoard    = boardData.GetCellDataAt(maxColumns-1, maxRows-1);
-        
-        while(firstNonPlayerCell != lastCellOnBoard)
-        {
-            firstNonPlayerCell.GetVisibleItem().Hide();
-            ++firstNonPlayerCell;
-        }
-        lastCellOnBoard.GetVisibleItem().Hide();
+        HideCells();
  
     }
 
@@ -84,17 +74,45 @@ public class GameController : MonoBehaviour
         cameraBehaviour.CenterToPosition(boardCenterCellPosition); 
 
         // Show the hiden cells
-        int maxColumns  = boardData.GetColumns();
-        int maxRows     = boardData.GetRows();
+        ShowCells();
+        
+    }
+
+    private void ShowCells()
+    {
+        BoardData boardData = BoardData.Get();
+        int maxColumns      = boardData.GetColumns();
+        int maxRows         = boardData.GetRows();
+
         CellData firstNonPlayerCell = boardData.GetBoardCenterCell();
         CellData lastCellOnBoard    = boardData.GetCellDataAt(maxColumns-1, maxRows-1);
+        --firstNonPlayerCell;
         
-         while(firstNonPlayerCell != lastCellOnBoard)
+        while(firstNonPlayerCell != lastCellOnBoard)
         {
             firstNonPlayerCell.GetVisibleItem().Show();
             ++firstNonPlayerCell;
         }
+
         lastCellOnBoard.GetVisibleItem().Show();
+    }
+
+    private void HideCells()
+    {
+        BoardData boardData = BoardData.Get();
+        int maxColumns      = boardData.GetColumns();
+        int maxRows         = boardData.GetRows();
+
+        CellData firstNonPlayerCell = boardData.GetBoardCenterCell();
+        CellData lastCellOnBoard    = boardData.GetCellDataAt(maxColumns-1, maxRows-1);
+        --firstNonPlayerCell;
         
+        while(firstNonPlayerCell != lastCellOnBoard)
+        {
+            firstNonPlayerCell.GetVisibleItem().Hide();
+            ++firstNonPlayerCell;
+        }
+
+        lastCellOnBoard.GetVisibleItem().Hide();
     }
 }

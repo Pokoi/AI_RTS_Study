@@ -15,9 +15,10 @@ public class Cell : MonoBehaviour
         cellBehaviour       = new CellBehaviour(GetComponent<Collider>());
     }
 
-        private void Start() {
-            cellBehaviour.GetCellData().GetVisibleItem().SetVisibleItems(visualTransforms);   
-        }
+    private void Start() {
+        cellBehaviour.GetCellData().GetVisibleItem().SetVisibleItems(visualTransforms);
+        cellBehaviour.GetCellData().GetVisibleItem().SetCollider(GetComponent<Collider>());     
+    }
     // Update is called once per frame
     void Update()
     {

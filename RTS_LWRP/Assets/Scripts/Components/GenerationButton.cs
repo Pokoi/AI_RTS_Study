@@ -29,6 +29,14 @@ public class GenerationButton : MonoBehaviour
         GameObject unit = GameController.Get().unitsPool.GetUnitInstance(unitType);
         unit.SetActive(true);
 
+        PlaceableItem placeableItemComponent = unit.GetComponent<PlaceableItem>();
+        
+        if(placeableItemComponent == null)
+        {
+           placeableItemComponent = unit.AddComponent<PlaceableItem>();
+        }
+
+        placeableItemComponent.AddFollowCursorComponent();
     }
    
 }
