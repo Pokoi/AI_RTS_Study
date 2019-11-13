@@ -46,7 +46,7 @@ public class GameController : MonoBehaviour
     private void Awake() 
     {
         instance = this;
-        unitsPool.SetMaxUnitsCount(aiController.GetMaxUnitsInTeam()); 
+        unitsPool.SetMaxUnitsCount(aiController.GetMaxUnitsInTeam() << 1); 
     }
 
     private void Start() 

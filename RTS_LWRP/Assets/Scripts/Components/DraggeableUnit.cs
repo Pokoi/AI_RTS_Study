@@ -31,11 +31,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlaceableItem : MonoBehaviour
+public class DraggeableUnit : MonoBehaviour
 {
     FollowCursor followCursorComponent;
     public LayerMask layerMask;
     Cell lastCellCollidedWith;
+    UnitType unitType;
+
     private void Start()
     {
         AddFollowCursorComponent();    
@@ -50,9 +52,11 @@ public class PlaceableItem : MonoBehaviour
         DragPlaceable();
     }
 
+    public void SetUnitType(UnitType unitType) => this.unitType = unitType;
+
     private void Update() 
     {
-        if(Input.GetMouseButtonDown(0) && followCursorComponent.GetFollowing())
+        if(Input.GetMouseButtonDown(0)&& followCursorComponent.GetFollowing())
         {
             DropPlaceable();
         }
@@ -73,6 +77,10 @@ public class PlaceableItem : MonoBehaviour
         {
             transform.position  = lastCellCollidedWith.transform.position;
             this.followCursorComponent.StopMoving();
+
+            CellData    targetCellData  = lastCellCollidedWith.GetComponent<Cell>().GetBehaviour().GetCellData();
+            Unit        placedUnit      = new Unit(targetCellData, new UnitData(this.unitType)); 
+            PlayerController.Get().AddUnitToFormation(placedUnit);
         }
     }
 

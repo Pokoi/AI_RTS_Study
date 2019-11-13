@@ -33,11 +33,11 @@ using UnityEngine;
 
 public class UnitsPool : MonoBehaviour
 {
-    public GameObject tankPrefab, rangedPrefab, meleePrefab, healerPrefab;
     List<GameObject> meleeUnits;
     List<GameObject> tankUnits;
     List<GameObject> rangedUnits;
     List<GameObject> healerUnits;
+    public List<GameObject> prefabs;
     int maxUnitsCount;
    
     public void SetMaxUnitsCount(int maxUnitsCount) => this.maxUnitsCount = maxUnitsCount;
@@ -68,7 +68,7 @@ public class UnitsPool : MonoBehaviour
         meleeUnits  = new List<GameObject>(); 
         tankUnits   = new List<GameObject>(); 
         rangedUnits = new List<GameObject>(); 
-        healerUnits = new List<GameObject>();    
+        healerUnits = new List<GameObject>();  
     }
     
     private void Start() 
@@ -82,9 +82,9 @@ public class UnitsPool : MonoBehaviour
         
         for(int t = 0; t < maxT; ++t)
         {
-            for(int i = 0; i < maxUnitsCount << 1; ++i)
+            for(int i = 0; i < maxUnitsCount; ++i)
             {
-                UnitData unitData = new UnitData((UnitType)t, null); 
+                
             }
 
         }               

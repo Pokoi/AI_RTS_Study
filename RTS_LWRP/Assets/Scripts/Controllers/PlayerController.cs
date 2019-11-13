@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
     int score;
     int choosenUnitsCount;
     static PlayerController instance;
+
+    ArmyAction playerFormation;
     
     public static PlayerController Get()    => instance;
     public void UpdateScore(int score)      => this.score += score;
@@ -53,5 +55,44 @@ public class PlayerController : MonoBehaviour
 
     public void UpdateChoosenUnits(int value) => choosenUnitsCount += value;
     public int GetChoosenUnitsCount() => choosenUnitsCount;
+
+    public void AddUnitToFormation(Unit u)
+    {
+        if(playerFormation == null)
+        {
+            playerFormation = new ArmyAction(AIController.Get().GetMaxUnitsInTeam());
+        }
+
+        if(choosenUnitsCount < (playerFormation.GetUnits().Length - 1))
+        {
+            playerFormation.GetUnits()[choosenUnitsCount] = u;
+            ++choosenUnitsCount;
+        }
+    }
+
+    public void RemoveLastUnitFromFormation()
+    {
+        if(playerFormation != null && choosenUnitsCount > 0)
+        {
+            --choosenUnitsCount;
+            playerFormation.GetUnits()[choosenUnitsCount] = null;
+        }
+    }
+
+    public void RemoveUnitFromFormation(Unit u)
+    {
+        if(playerFormation != null && choosenUnitsCount > 0)
+        {
+            Unit[] playerUnits = playerFormation.GetUnits();
+            
+            int index;
+            for (index = 0; index < playerUnits.Length && playerUnits[index] != u; ++index);
+            if(index < playerUnits.Length)
+            {
+                playerUnits[index] = null;
+                --choosenUnitsCount;
+            }
+        }        
+    }
 
 }

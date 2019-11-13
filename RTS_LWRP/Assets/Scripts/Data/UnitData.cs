@@ -36,10 +36,25 @@ public class UnitData
     private UnitType    type;
     private UnitBehaviour behaviour;
 
-    public UnitData(UnitType type, UnitBehaviour behaviour)
+    public UnitData(UnitType type)
     {
         this.type = type;
-        this.behaviour = behaviour;
+            
+        switch(this.type)
+        {
+            case UnitType.healer:
+                this.behaviour = new HealerSoldier();
+            break;
+            case UnitType.melee:
+                this.behaviour = new MeleeSoldier();
+            break;
+            case UnitType.ranged:
+                this.behaviour = new RangedSoldier();
+            break;
+            case UnitType.tank:
+                this.behaviour = new TankSoldier();
+            break;
+        }
     }
 
     public UnitBehaviour GetBehaviour() => this.behaviour;

@@ -29,14 +29,15 @@ public class GenerationButton : MonoBehaviour
         GameObject unit = GameController.Get().unitsPool.GetUnitInstance(unitType);
         unit.SetActive(true);
 
-        PlaceableItem placeableItemComponent = unit.GetComponent<PlaceableItem>();
+        DraggeableUnit draggeableUnitComponent = unit.GetComponent<DraggeableUnit>();
         
-        if(placeableItemComponent == null)
+        if(draggeableUnitComponent == null)
         {
-           placeableItemComponent = unit.AddComponent<PlaceableItem>();
+           draggeableUnitComponent = unit.AddComponent<DraggeableUnit>();
         }
-
-        placeableItemComponent.AddFollowCursorComponent();
+        
+        draggeableUnitComponent.SetUnitType(unitType);
+        draggeableUnitComponent.AddFollowCursorComponent();
     }
    
 }

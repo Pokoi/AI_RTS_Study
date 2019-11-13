@@ -40,12 +40,12 @@ public class AIController : MonoBehaviour
     RegretMatching<ArmyAction> teamFormerRM = null;
     ArmyAction          selfFormationUCB1; 
     ArmyAction          selfFormationRM;
-    AIController        instance;
+    static AIController        instance;
 
     int score;    
 
 
-    public AIController Get() => instance;
+    public static AIController Get() => instance;
     public int GetMaxUnitsInTeam() => maxUnitsInTeam;
     
     public AIController Create()
@@ -104,8 +104,8 @@ public class AIController : MonoBehaviour
     }
     void ChooseFormation()
     {
-        selfFormationUCB1 = teamFormerUCB1.Play();
-        selfFormationRM = teamFormerRM.Play();
+        selfFormationUCB1   = teamFormerUCB1.Play();
+        selfFormationRM     = teamFormerRM.Play();
 
     }
     void UpdateScore (int newScore) => this.score += newScore;

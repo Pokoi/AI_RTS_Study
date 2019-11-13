@@ -84,25 +84,7 @@ public class Actions <T> where T : Action
 
         for(int t = 0; t < maxT; ++t)
         {
-            UnitBehaviour behaviour = null;
-            
-            switch((UnitType) t)
-            {
-                case UnitType.healer:
-                    behaviour = new HealerSoldier();
-                break;
-                case UnitType.melee:
-                    behaviour = new MeleeSoldier();
-                break;
-                case UnitType.ranged:
-                    behaviour = new RangedSoldier();
-                break;
-                case UnitType.tank:
-                    behaviour = new TankSoldier();
-                break;
-            } 
-
-            possibleUnitData[t] = new UnitData((UnitType)t, behaviour);
+            possibleUnitData[t] = new UnitData((UnitType)t);
         } 
 
         for (int x = 0; x < maxX; ++x)
