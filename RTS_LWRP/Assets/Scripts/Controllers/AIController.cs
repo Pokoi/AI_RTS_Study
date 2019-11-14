@@ -94,6 +94,8 @@ public class AIController : MonoBehaviour
 
     void Start() 
     {
+        Create();
+        
         possibleActions = new Actions<ArmyAction>(maxUnitsInTeam);
         teamFormerUCB1  = new UCB1<ArmyAction>(possibleActions);
         teamFormerRM    = new RegretMatching<ArmyAction>(possibleActions);

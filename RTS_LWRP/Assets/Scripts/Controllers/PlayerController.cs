@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
     {
         if(instance == null)
         {
-            instance = new PlayerController();
+            instance = this;
         }
 
         return instance;
@@ -93,6 +93,11 @@ public class PlayerController : MonoBehaviour
                 --choosenUnitsCount;
             }
         }        
+    }
+
+    private void Start() 
+    {
+        Create();   
     }
 
 }

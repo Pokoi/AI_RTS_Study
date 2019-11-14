@@ -898,7 +898,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8932072e7781b48aba8e17714fa214cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabs: []
+  meleePrefab: {fileID: 2318637208171402710, guid: f7d3f9e10edee44d598450714b86ef7a,
+    type: 3}
+  rangedPrefab: {fileID: 2318637208171402710, guid: f7d3f9e10edee44d598450714b86ef7a,
+    type: 3}
+  healerPrefab: {fileID: 2318637208171402710, guid: f7d3f9e10edee44d598450714b86ef7a,
+    type: 3}
+  tankPrefab: {fileID: 2318637208171402710, guid: f7d3f9e10edee44d598450714b86ef7a,
+    type: 3}
 --- !u!4 &1769708150
 Transform:
   m_ObjectHideFlags: 0

@@ -12,6 +12,7 @@ public class LookAtCamera : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        transformToFace = transform;
         cameraTransform = Camera.main.transform;
         StartCoroutine(FacingToCamera(secondsBetweenRefresh));
     }

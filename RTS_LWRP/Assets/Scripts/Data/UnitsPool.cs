@@ -33,11 +33,11 @@ using UnityEngine;
 
 public class UnitsPool : MonoBehaviour
 {
+    public GameObject meleePrefab, rangedPrefab, healerPrefab, tankPrefab;
     List<GameObject> meleeUnits;
     List<GameObject> tankUnits;
     List<GameObject> rangedUnits;
     List<GameObject> healerUnits;
-    public List<GameObject> prefabs;
     int maxUnitsCount;
    
     public void SetMaxUnitsCount(int maxUnitsCount) => this.maxUnitsCount = maxUnitsCount;
@@ -78,17 +78,23 @@ public class UnitsPool : MonoBehaviour
     
     void FillPool(int maxUnitsCount)
     {
-        int maxT = System.Enum.GetNames(typeof(UnitType)).Length;
-        
-        for(int t = 0; t < maxT; ++t)
-        {
-            for(int i = 0; i < maxUnitsCount; ++i)
-            {
-                
-            }
-
-        }               
+        FillList(meleeUnits ,   meleePrefab ,   maxUnitsCount);
+        FillList(rangedUnits,   rangedPrefab,   maxUnitsCount);
+        FillList(healerUnits,   healerPrefab,   maxUnitsCount);
+        FillList(tankUnits  ,   tankPrefab  ,   maxUnitsCount);         
     }
+
+    void FillList(List<GameObject> list, GameObject prefab, int count)
+    {
+        while (count > 0)
+        {
+            GameObject instance = Instantiate(prefab, transform.position, Quaternion.identity);
+            list.Add(instance);
+            instance.SetActive(false);
+            --count;
+        }
+    }
+
 
     GameObject GetFromPool(List<GameObject> pool)
     {

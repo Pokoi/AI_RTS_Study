@@ -189,4 +189,22 @@ public class ArmyAction : Action
     public void AddUnitAt(Unit unit, int index) => units[index] = unit;
     
     public Unit[] GetUnits() => units;
+
+    static public bool operator == (ArmyAction thisArmyAction, ArmyAction otherArmyAction)
+    {
+        int equalsUnits = 0;
+
+        foreach (Unit thisU in thisArmyAction.GetUnits())
+        {
+            foreach (Unit otherU in otherArmyAction.GetUnits())
+            {
+                if(thisU == otherU) ++equalsUnits;
+            }
+        }
+
+        return equalsUnits == thisArmyAction.GetUnits().Length;
+    }
+
+     static public bool operator != (ArmyAction thisArmyAction, ArmyAction otherArmyAction) => !(thisArmyAction == otherArmyAction);
+    
 }

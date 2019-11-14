@@ -58,7 +58,21 @@ public class UnitData
     }
 
     public UnitBehaviour GetBehaviour() => this.behaviour;
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
+
     public void SetUnitBehaviour (UnitBehaviour behaviour) => this.behaviour = behaviour;
+
+    static public bool operator == (UnitData thisUnitData, UnitData otherUnitData)
+    {
+        return thisUnitData.GetType() == otherUnitData.GetType();
+    }
+
+     static public bool operator != (UnitData thisUnitData, UnitData otherUnitData) => !(thisUnitData == otherUnitData);
+    
 }
 
 public enum UnitType
