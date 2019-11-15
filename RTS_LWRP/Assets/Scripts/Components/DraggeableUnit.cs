@@ -36,7 +36,6 @@ public class DraggeableUnit : MonoBehaviour
     FollowCursor followCursorComponent;
     public LayerMask layerMask;
     Cell lastCellCollidedWith;
-    UnitType unitType;
 
     private void Start()
     {
@@ -51,8 +50,6 @@ public class DraggeableUnit : MonoBehaviour
 
         DragPlaceable();
     }
-
-    public void SetUnitType(UnitType unitType) => this.unitType = unitType;
 
     private void Update() 
     {
@@ -77,9 +74,12 @@ public class DraggeableUnit : MonoBehaviour
         {
             transform.position  = lastCellCollidedWith.transform.position;
             this.followCursorComponent.StopMoving();
+            Soldier thisSoldier = transform.GetComponent<Soldier>();
 
             CellData    targetCellData  = lastCellCollidedWith.GetComponent<Cell>().GetBehaviour().GetCellData();
-            Unit        placedUnit      = new Unit(targetCellData, new UnitData(this.unitType)); 
+            Unit        placedUnit      = new Unit(targetCellData, new UnitData(thisSoldier.GetUnitType())); 
+
+            thisSoldier.SetUnit(placedUnit);
             PlayerController.Get().AddUnitToFormation(placedUnit);
         }
     }

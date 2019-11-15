@@ -35,8 +35,7 @@ public class GenerationButton : MonoBehaviour
         {
            draggeableUnitComponent = unit.AddComponent<DraggeableUnit>();
         }
-        
-        draggeableUnitComponent.SetUnitType(unitType);
+        unit.GetComponent<Soldier>().SetUnitType(unitType);
         draggeableUnitComponent.AddFollowCursorComponent();
     }
    

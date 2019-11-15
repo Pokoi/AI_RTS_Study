@@ -158,7 +158,7 @@ public class Actions <T> where T : Action
         {
             for (int j = i + 1; j < u.Length; ++j)
             {
-                if (u[i] != null && u[j] != null && u[i].GetPosition() == u[j].GetPosition())
+                if (!(u[i] is null) && !(u[j] is null) && u[i].GetPosition() == u[j].GetPosition())
                 {
                   return false;  
                 }  

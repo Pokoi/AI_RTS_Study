@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
 
     public void AddUnitToFormation(Unit u)
     {
-        if(playerFormation == null)
+        if(playerFormation is null)
         {
             playerFormation = new ArmyAction(AIController.Get().GetMaxUnitsInTeam());
         }
