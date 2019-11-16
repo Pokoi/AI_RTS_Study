@@ -72,15 +72,18 @@ public class DraggeableUnit : MonoBehaviour
     {
         if(lastCellCollidedWith)
         {
-            transform.position  = lastCellCollidedWith.transform.position;
-            this.followCursorComponent.StopMoving();
-            Soldier thisSoldier = transform.GetComponent<Soldier>();
-
+            Soldier     thisSoldier     = transform.GetComponent<Soldier>();
             CellData    targetCellData  = lastCellCollidedWith.GetComponent<Cell>().GetBehaviour().GetCellData();
             Unit        placedUnit      = new Unit(targetCellData, new UnitData(thisSoldier.GetUnitType())); 
 
-            thisSoldier.SetUnit(placedUnit);
-            PlayerController.Get().AddUnitToFormation(placedUnit);
+            if(PlayerController.Get().UnitInEmptyPosition(placedUnit))
+            {
+                transform.position  = lastCellCollidedWith.transform.position;
+                this.followCursorComponent.StopMoving();
+                
+                thisSoldier.SetUnit(placedUnit);
+                PlayerController.Get().AddUnitToFormation(placedUnit);
+            }
         }
     }
 
