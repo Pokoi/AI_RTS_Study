@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour
             playerFormation = new ArmyAction(AIController.Get().GetMaxUnitsInTeam());
         }
 
-        if(choosenUnitsCount < (playerFormation.GetUnits().Length - 1))
+        if(choosenUnitsCount < (playerFormation.GetUnits().Length))
         {
             playerFormation.GetUnits()[choosenUnitsCount] = u;
             ++choosenUnitsCount;

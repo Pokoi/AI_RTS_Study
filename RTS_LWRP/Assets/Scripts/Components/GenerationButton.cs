@@ -6,21 +6,25 @@ public class GenerationButton : MonoBehaviour
 {
     public void GenerateMeleeUnit()
     {
+        if(AbleToGenerateMoreUnits())
         GenerateUnit(UnitType.melee);
     }
 
     public void GenerateRangedUnit()
     {
+        if(AbleToGenerateMoreUnits())
         GenerateUnit(UnitType.ranged);
     }
 
     public void GenerateTankUnit()
     {
+        if(AbleToGenerateMoreUnits())
         GenerateUnit(UnitType.tank);
     }
 
     public void GenerateHealerUnit()
     {
+        if(AbleToGenerateMoreUnits())
         GenerateUnit(UnitType.healer);
     }
 
@@ -39,4 +43,8 @@ public class GenerationButton : MonoBehaviour
         draggeableUnitComponent.AddFollowCursorComponent();
     }
    
+   private bool AbleToGenerateMoreUnits()
+   {
+       return ( PlayerController.Get().GetChoosenUnitsCount() < AIController.Get().GetMaxUnitsInTeam()) && !(DraggeableUnit.draggingUnit);
+   }
 }

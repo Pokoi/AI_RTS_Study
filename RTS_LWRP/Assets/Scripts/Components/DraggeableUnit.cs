@@ -33,8 +33,9 @@ using UnityEngine;
 
 public class DraggeableUnit : MonoBehaviour
 {
-    FollowCursor followCursorComponent;
     public LayerMask layerMask;
+    public static bool draggingUnit;
+    FollowCursor followCursorComponent;
     Cell lastCellCollidedWith;
 
     private void Start()
@@ -83,6 +84,8 @@ public class DraggeableUnit : MonoBehaviour
                 
                 thisSoldier.SetUnit(placedUnit);
                 PlayerController.Get().AddUnitToFormation(placedUnit);
+
+                draggingUnit = false;
             }
         }
     }
@@ -90,6 +93,7 @@ public class DraggeableUnit : MonoBehaviour
     private void DragPlaceable()
     {
         this.followCursorComponent.StartMoving();
+        draggingUnit = true;
     }
     
     
