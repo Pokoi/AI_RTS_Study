@@ -75,7 +75,7 @@ public class Actions <T> where T : Action
 
     private Unit[] CreatePossibleUnits()
     {
-        int maxX = BoardData.Get().GetColumns() >> 1;
+        int maxX = (BoardData.Get().GetColumns() >> 1);
         int maxY = BoardData.Get().GetRows();
         int maxT = System.Enum.GetNames(typeof(UnitType)).Length;
 
@@ -93,7 +93,8 @@ public class Actions <T> where T : Action
             {
                 for(int t = 0; t < maxT; ++t)
                 {
-                    possibleUnits[x+y+t] = new Unit(BoardData.Get().GetCellDataAt(x, y),possibleUnitData[t]);
+                    int index = t + (maxT * y) + (maxT * maxY * x);
+                    possibleUnits[index] = new Unit(BoardData.Get().GetCellDataAt(x, y),possibleUnitData[t]);
                 }
             }
         }
@@ -158,7 +159,7 @@ public class Actions <T> where T : Action
         {
             for (int j = i + 1; j < u.Length; ++j)
             {
-                if (!(u[i] is null) && !(u[j] is null) && u[i].GetPosition() == u[j].GetPosition())
+                if (u[i].GetPosition() == u[j].GetPosition())
                 {
                   return false;  
                 }  

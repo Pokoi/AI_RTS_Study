@@ -75,6 +75,8 @@ public class GameController : MonoBehaviour
 
         // Show the hiden cells
         ShowCells();
+
+        AIController.Get().InterpreateFormation();
         
     }
 

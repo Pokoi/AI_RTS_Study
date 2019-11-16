@@ -34,9 +34,10 @@ using UnityEngine;
 public class AIController : MonoBehaviour
 {
     [SerializeField] 
-    private int         maxUnitsInTeam; 
-    Actions<ArmyAction> possibleActions;
-    UCB1<ArmyAction>    teamFormerUCB1 = null;
+    private int             maxUnitsInTeam; 
+    public BoardBehaviour   boardBehaviour;
+    Actions<ArmyAction>     possibleActions;
+    UCB1<ArmyAction>        teamFormerUCB1 = null;
     RegretMatching<ArmyAction> teamFormerRM = null;
     ArmyAction          selfFormationUCB1; 
     ArmyAction          selfFormationRM;
@@ -80,15 +81,24 @@ public class AIController : MonoBehaviour
         teamFormerRM.UpdateValues(oponentFormation);
     }
 
-    public void InterpreateFormation(ArmyAction formation)
+    public void InterpreateFormation()
     {
+        ArmyAction formation = selfFormationRM;
         foreach (Unit unit in formation.GetUnits())
         {
-            //Get the position
+            int cellDataRelativeX = BoardData.Get().GetColumns() - unit.GetPosition().GetX() - 1;
+            int cellDataRelativeY = BoardData.Get().GetRows()    - unit.GetPosition().GetY() - 1;
 
-            //In base of the type get a unit from the pool
-
-            //Set the unit in the position
+            CellData relativeCellData       = BoardData.Get().GetCellDataAt(cellDataRelativeX, cellDataRelativeY);
+            Vector3  cellDataWorldPosition  = boardBehaviour.GetWorldPositionOfCell(relativeCellData);
+        
+            UnitType    AI_unitUnitType = unit.GetUnitData().GetType();
+            GameObject  AI_unit         = GameController.Get().unitsPool.GetUnitInstance(AI_unitUnitType);
+            
+            AI_unit.SetActive(true);
+            AI_unit.GetComponent<Soldier>().SetUnitType(AI_unitUnitType);
+            
+            AI_unit.transform.position = cellDataWorldPosition;
         }
     }
 

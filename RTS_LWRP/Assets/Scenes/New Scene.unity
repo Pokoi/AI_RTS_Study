@@ -764,6 +764,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxUnitsInTeam: 4
+  boardBehaviour: {fileID: 813601993}
 --- !u!4 &1404699885
 Transform:
   m_ObjectHideFlags: 0

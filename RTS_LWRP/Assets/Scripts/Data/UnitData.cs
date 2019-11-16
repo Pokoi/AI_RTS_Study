@@ -58,6 +58,7 @@ public class UnitData
     }
 
     public UnitBehaviour GetBehaviour() => this.behaviour;
+    public UnitType GetType() => this.type;
 
     public override int GetHashCode()
     {
