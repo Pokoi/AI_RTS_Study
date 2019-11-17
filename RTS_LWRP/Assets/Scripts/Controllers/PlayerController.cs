@@ -118,6 +118,8 @@ public class PlayerController : MonoBehaviour
         return true;
     }
 
+    public ArmyAction GetPlayerFormation() => playerFormation;
+
     private void Start() 
     {
         Create();  

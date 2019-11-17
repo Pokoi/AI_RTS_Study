@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<XmlFormationVariables xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <boardRows>3</boardRows>
+  <boardColumns>6</boardColumns>
+  <maxUnitsPerTeam>4</maxUnitsPerTeam>
+  <unitTypesCount>4</unitTypesCount>
+  <possibleFormationsCount>58881</possibleFormationsCount>
+  <UCB1ObjectDataPath>Assets/XMLData/UCB1_3x6_4_of_4.xml</UCB1ObjectDataPath>
+  <RegretMatchingObjectDataPath>Assets/XMLData/RM_3x6_4_of_4.xml</RegretMatchingObjectDataPath>
+</XmlFormationVariables>

@@ -41,18 +41,23 @@ public class GameController : MonoBehaviour
     
     static GameController   instance;
 
+    XmlFormationVariables formationVariablesXMLData;
+    XmlUCB1ObjectData UCB1ObjectData;
+
     public static GameController Get()  => instance;
 
     private void Awake() 
     {
         instance = this;
-        unitsPool.SetMaxUnitsCount(aiController.GetMaxUnitsInTeam() << 1); 
+        unitsPool.SetMaxUnitsCount(aiController.GetMaxUnitsInTeam() << 1);
     }
 
     private void Start() 
     {
+        CreateFormationVariablesXml();
         Invoke("OnPlayerDecideFormation", 3);
         Invoke("OnStartBattle", 6);
+        Invoke("OnGameEnds", 7);
     }
     private void OnPlayerDecideFormation()
     {
@@ -80,6 +85,23 @@ public class GameController : MonoBehaviour
         
     }
 
+    private void OnBattleEnds()
+    {
+        // Calculate score
+        int score = 0;
+
+        // Comunicate score to IA
+        aiController.OnBattleEnd(playerController.GetPlayerFormation(), score); 
+
+        // Update XML file
+        UCB1ObjectData.utility = aiController.GetUCB1TeamFormer().GetUtility();
+    }
+
+    private void OnGameEnds()
+    {
+        XmlManaging.CreateFile(UCB1ObjectData, formationVariablesXMLData.UCB1ObjectDataPath);
+    }
+
     private void ShowCells()
     {
         BoardData boardData = BoardData.Get();
@@ -98,7 +120,6 @@ public class GameController : MonoBehaviour
 
         lastCellOnBoard.GetVisibleItem().Show();
     }
-
     private void HideCells()
     {
         BoardData boardData = BoardData.Get();
@@ -116,5 +137,34 @@ public class GameController : MonoBehaviour
         }
 
         lastCellOnBoard.GetVisibleItem().Hide();
+    }
+    private void CreateFormationVariablesXml()
+    {
+        string UCB1XmlFilePath = "Assets/XMLData/";
+        string RegretMatchingXmlFilePath = "Assets/XMLData/";
+        string formationVariablesPath = "Assets/XMLData/";
+
+        byte rows           = (byte) BoardData.Get().GetRows();
+        byte columns        = (byte) BoardData.Get().GetColumns();
+        byte maxUnitsInTeam = (byte) aiController.GetMaxUnitsInTeam();
+        byte unitTypesCount = (byte) System.Enum.GetNames(typeof(UnitType)).Length;
+        uint actionsCount   = aiController.GetPossibleActionsCount();
+
+        UCB1XmlFilePath           += $"UCB1_{rows}x{columns}_{maxUnitsInTeam}_of_{unitTypesCount}.xml";
+        RegretMatchingXmlFilePath += $"RM_{rows}x{columns}_{maxUnitsInTeam}_of_{unitTypesCount}.xml";
+        formationVariablesPath    += $"FormationVariables_{rows}x{columns}_{maxUnitsInTeam}_of_{unitTypesCount}.xml";
+        
+        formationVariablesXMLData = new XmlFormationVariables
+                                                            (
+                                                                rows,
+                                                                columns,
+                                                                maxUnitsInTeam,
+                                                                unitTypesCount,
+                                                                actionsCount,
+                                                                UCB1XmlFilePath,
+                                                                RegretMatchingXmlFilePath
+                                                            );
+
+        XmlManaging.CreateFile<XmlFormationVariables>(formationVariablesXMLData, formationVariablesPath);
     }
 }

@@ -10,11 +10,7 @@ public class test : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ArrayBidimensional AB = new ArrayBidimensional();
-        XmlManaging.CreateFile<ArrayBidimensional>(AB, "test_arrayBD.xml");
-
-        ArrayBidimensional BA = XmlManaging.ReadFile<ArrayBidimensional>("test_arrayBD.xml");
-        Debug.Log("");
+   
     }
 
     // Update is called once per frame
@@ -32,17 +28,3 @@ public class test : MonoBehaviour
     {}
 }
 
-public class ArrayBidimensional
-{
-    public int [][] array;
-    public string name;
-    public int peso;
-    public ArrayBidimensional()
-    {
-        array = new int [10][];
-        for (int i = 0; i< array.Length; ++i)
-        {
-            array[i] = new int[20];
-        }
-    }
-}

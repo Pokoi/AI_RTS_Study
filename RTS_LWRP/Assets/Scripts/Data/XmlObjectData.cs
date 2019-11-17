@@ -1,6 +1,6 @@
-/*
- * File: AIAlgorithim.cs
- * File Created: Tuesday, 29th October 2019 5:27:09 pm
+﻿/*
+ * File: XmlObjectData.cs
+ * File Created: Sunday, 17th November 2019 3:55:36 pm
  * ––––––––––––––––––––––––
  * Author: Jesus Fermin, 'Pokoi', Villar  (hello@pokoidev.com)
  * ––––––––––––––––––––––––
@@ -27,40 +27,9 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System.Xml.Serialization;
 
-public class AIAlgorithim <T> where T : Action
+public class XmlObjectData
 {
-   
-    public Actions<T>    possibleActions;
-    private byte [][]    utility;
     
-    public AIAlgorithim(Actions<T> _possibleActions)
-    {
-        this.possibleActions    = _possibleActions;
-        this.utility            = new byte[this.possibleActions.GetCount()][];
-        for (int index = 0; index < this.utility.Length; ++index)
-        {
-            utility[index] = new byte[this.possibleActions.GetCount()];
-        }
-
-    }
-
-    public virtual T GetNextAction () => default(T);
-
-    public void UpdateUtility(T selfAction, T oponentAction, int score)
-    {
-        utility[oponentAction.Index][selfAction.Index] = (byte)score;
-    }
-
-    public virtual byte GetUtilityOf(T selfAction, T oponentAction)
-    {
-        return utility[oponentAction.Index][selfAction.Index];
-    }
-    public virtual byte [][] GetUtility() => this.utility; 
-
-    public virtual void SetUtility(byte [][] utility) => this.utility = utility;
 }

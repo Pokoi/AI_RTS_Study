@@ -93,7 +93,7 @@ public class UCB1 <T> : AIAlgorithim <T> where T : Action
     {
         playedRounds++;
         float utility;
-        utility = GetUtility(selfLastAction, oponentAction);
+        utility = GetUtilityOf(selfLastAction, oponentAction);
         scoreByAction[selfLastAction.Index] += utility;
         timesPlayedByAction[selfLastAction.Index]++;
     }

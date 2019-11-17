@@ -90,8 +90,8 @@ public class RegretMatching <T> : AIAlgorithim <T> where T : Action
     {
         for (int i = 0; i < num_actions; ++i)
         {
-            regret[i] += GetUtility(possibleActions.GetAt(i), oponentAction);
-            regret[i] -= GetUtility(last_action, oponentAction);
+            regret[i] += GetUtilityOf(possibleActions.GetAt(i), oponentAction);
+            regret[i] -= GetUtilityOf(last_action, oponentAction);
         }
     }
 

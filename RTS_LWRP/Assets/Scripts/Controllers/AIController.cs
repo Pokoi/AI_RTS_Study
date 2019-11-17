@@ -39,15 +39,18 @@ public class AIController : MonoBehaviour
     Actions<ArmyAction>     possibleActions;
     UCB1<ArmyAction>        teamFormerUCB1 = null;
     RegretMatching<ArmyAction> teamFormerRM = null;
-    ArmyAction          selfFormationUCB1; 
-    ArmyAction          selfFormationRM;
-    static AIController        instance;
+    ArmyAction              selfFormationUCB1; 
+    ArmyAction              selfFormationRM;
+    static AIController     instance;
 
     int score;    
 
 
     public static AIController Get() => instance;
     public int GetMaxUnitsInTeam() => maxUnitsInTeam;
+    public UCB1<ArmyAction> GetUCB1TeamFormer() => teamFormerUCB1;
+    public RegretMatching<ArmyAction> GetRMTeamFormer() => teamFormerRM;
+    public uint GetPossibleActionsCount() => possibleActions.GetCount();
     
     public AIController Create()
     {
@@ -62,7 +65,7 @@ public class AIController : MonoBehaviour
     public void OnBattleEnd(ArmyAction oponentFormation, int score)
     {
         teamFormerUCB1.UpdateUtility(selfFormationUCB1, oponentFormation, score);
-        int utility = teamFormerUCB1.GetUtility(selfFormationUCB1, oponentFormation);
+        int utility = teamFormerUCB1.GetUtilityOf(selfFormationUCB1, oponentFormation);
 
         if (utility < 0)
         {
@@ -102,15 +105,13 @@ public class AIController : MonoBehaviour
         }
     }
 
-    void Start() 
+    void Awake() 
     {
         Create();
         
         possibleActions = new Actions<ArmyAction>(maxUnitsInTeam);
         teamFormerUCB1  = new UCB1<ArmyAction>(possibleActions);
         teamFormerRM    = new RegretMatching<ArmyAction>(possibleActions);
-
-        Debug.Log($"Possible formations: {possibleActions.GetCount()}");
 
         ChooseFormation();
     }
