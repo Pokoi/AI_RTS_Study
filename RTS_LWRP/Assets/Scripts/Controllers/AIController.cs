@@ -83,7 +83,7 @@ public class AIController : MonoBehaviour
 
     public void InterpreateFormation()
     {
-        ArmyAction formation = selfFormationRM;
+        ArmyAction formation  = selfFormationUCB1;
         foreach (Unit unit in formation.GetUnits())
         {
             int cellDataRelativeX = BoardData.Get().GetColumns() - unit.GetPosition().GetX() - 1;

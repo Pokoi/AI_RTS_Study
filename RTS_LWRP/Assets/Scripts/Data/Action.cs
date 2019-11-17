@@ -103,11 +103,11 @@ public class Actions <T> where T : Action
     }
     private void InitializeActions(Unit[] array, int m)
     {
-        Unit [] result  = new Unit [m];
         int     index   = 0;
 
         foreach (Unit[] u in UnitCombinations (m, array))
         {
+            Unit [] result  = new Unit [m];
             for (int i = 0; i < m; ++i)
             {
                 result [i] = u[i]; 
