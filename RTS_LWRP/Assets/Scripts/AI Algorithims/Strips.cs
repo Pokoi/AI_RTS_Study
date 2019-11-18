@@ -31,9 +31,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Strips <T> 
+public class Strips 
 {
-    public List<OperatorStrips> currentPlan;
+    public  List<OperatorStrips> currentPlan;
     private List<OperatorStrips> operators;
     private List<PropertyStrips> ownProperties;
 
@@ -48,35 +48,22 @@ public class Strips <T>
         
     }
 
-    public void AddProperty(PropertyStrips _p)
+    public void AddProperty(PropertyStrips propertyStrips)
     {
-        if (!ownProperties.Contains(_p))
+        if (!ownProperties.Contains(propertyStrips))
         {
-            ownProperties.Add(_p);
+            ownProperties.Add(propertyStrips);
         }
     }
 
-    public T GetNextAction()
-    {            
-        if(operators.Count == 0)
-        {
-            var l = this._character.BoardManager.boardInfo.ItemsOnBoard;
-            foreach (PlaceableItem p in l)
-            {
-                var lPC = new List<PropertyStrips>();
-                foreach( var pc in p.Preconditions) { lPC.Add(new PropertyStrips(pc.Tag));}
-                var target = this._character.BoardManager.boardInfo.CellWithItem(p.Tag);
-                operators.Add(new OperatorStrips(lPC, target, p.Tag));
-                
-            }
-        }
-
+    public string GetNextAction()
+    {   
         desiredTags.Add("Goal");
 
         Analize();                    
         
-        var nextOperation = currentPlan[0];            
-        return nextOperation.GetCellInfo();            
+        OperatorStrips nextOperation = currentPlan[0];            
+        return nextOperation.GetFunctionName();            
     }
 
     private void Analize()
@@ -88,23 +75,41 @@ public class Strips <T>
             foreach (OperatorStrips stripsOperator in operators)
             {
                 List<string> ownedTags = new List<string>();
-                foreach (var property in ownProperties) ownedTags.Add(property.GetTag());
+                
+                foreach (PropertyStrips property in ownProperties) 
+                {
+                    ownedTags.Add(property.GetTag());
+                }
 
-                var iterator = 0;
-                var added_conditions = stripsOperator.GetAddedProperties();  
+                int iterator = 0;
+
+                List <PropertyStrips> added_conditions = stripsOperator.GetAddedProperties();  
                 
                 for (iterator = 0; iterator < stripsOperator.GetAddedProperties().Count; iterator++)
                 {
                     if (desiredTags.Contains(added_conditions[iterator].GetTag()) && !currentPlan.Contains(stripsOperator))
                     {
                         currentPlan.Add(stripsOperator);
-                        foreach (var condition in stripsOperator.GetPreconditions()) if (!ownedTags.Contains(condition.GetTag())) desiredTags.Add(condition.GetTag());                            
-                        foreach (var added in stripsOperator.GetAddedProperties()) if (desiredTags.Contains(added.GetTag())) desiredTags.Remove(added.GetTag());
+                        foreach (PropertyStrips condition in stripsOperator.GetPreconditions()) 
+                        {
+                            if (!ownedTags.Contains(condition.GetTag()))
+                            {
+                                 desiredTags.Add(condition.GetTag());    
+                            }
+                        }                        
+                        foreach (PropertyStrips added in stripsOperator.GetAddedProperties()) 
+                        {
+                            if (desiredTags.Contains(added.GetTag())) 
+                            {
+                                desiredTags.Remove(added.GetTag());
+                            }
+                        }
                     }
                 }            
             }
             
         }
+
         currentPlan.Reverse();
     }
 
@@ -114,8 +119,8 @@ public class PropertyStrips
 {
     string tag;
 
-    public PropertyStrips (string tag) => this.tag = tag;
-    public string GetTag() => tag;
+    public PropertyStrips (string tag)  => this.tag = tag;
+    public string GetTag()              => tag;
 }
 
 public class OperatorStrips
@@ -124,12 +129,16 @@ public class OperatorStrips
     private List<PropertyStrips> addedProperties;
     private List<PropertyStrips> eliminatedProperties;
 
-    public OperatorStrips(List<PropertyStrips> pc, string resultTag)
+    string functionName;
+
+    public OperatorStrips(List<PropertyStrips> preconditions, string resultTag, string functionName)
     {
-        this.preconditions = pc;
+        this.preconditions   = preconditions;
         this.addedProperties = new List<PropertyStrips>{new PropertyStrips(resultTag)};
+        this.functionName    = functionName;
     }
 
     public List<PropertyStrips> GetAddedProperties()    => addedProperties;
     public List<PropertyStrips> GetPreconditions()      => preconditions;
+    public string GetFunctionName()                     => functionName;
 }

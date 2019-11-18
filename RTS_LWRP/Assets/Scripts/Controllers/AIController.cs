@@ -41,6 +41,7 @@ public class AIController : MonoBehaviour
     RegretMatching<ArmyAction> teamFormerRM = null;
     ArmyAction              selfFormationUCB1; 
     ArmyAction              selfFormationRM;
+    Strips                  decisionMaker;
     static AIController     instance;
 
     int score;    
