@@ -55,6 +55,7 @@ public class GameController : MonoBehaviour
     private void Start() 
     {
         CreateFormationVariablesXml();
+        ReadAlgorithimXml();
         Invoke("OnPlayerDecideFormation", 3);
         Invoke("OnStartBattle", 6);
         Invoke("OnGameEnds", 7);
@@ -140,9 +141,9 @@ public class GameController : MonoBehaviour
     }
     private void CreateFormationVariablesXml()
     {
-        string UCB1XmlFilePath = "Assets/XMLData/";
+        string UCB1XmlFilePath           = "Assets/XMLData/";
         string RegretMatchingXmlFilePath = "Assets/XMLData/";
-        string formationVariablesPath = "Assets/XMLData/";
+        string formationVariablesPath    = "Assets/XMLData/";
 
         byte rows           = (byte) BoardData.Get().GetRows();
         byte columns        = (byte) BoardData.Get().GetColumns();
@@ -166,5 +167,11 @@ public class GameController : MonoBehaviour
                                                             );
 
         XmlManaging.CreateFile<XmlFormationVariables>(formationVariablesXMLData, formationVariablesPath);
+    }
+
+    private void ReadAlgorithimXml()
+    {
+        UCB1ObjectData = XmlManaging.ReadFile<XmlUCB1ObjectData>(formationVariablesXMLData.UCB1ObjectDataPath);
+        aiController.GetUCB1TeamFormer().SetUtility(UCB1ObjectData.utility);
     }
 }

@@ -41,4 +41,6 @@ public abstract class UnitBehaviour
     public abstract void Attack();
     public abstract void GetDamage();
 
+    public virtual int GetHealth() => health;
+
 }
