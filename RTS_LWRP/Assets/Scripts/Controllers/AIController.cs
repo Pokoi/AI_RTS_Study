@@ -33,25 +33,27 @@ using UnityEngine;
 
 public class AIController : MonoBehaviour
 {
-    [SerializeField] 
-    private int             maxUnitsInTeam; 
+    public enum FormationAlgorithims {UCB1, RegretMatching};
+    public FormationAlgorithims formationAlgorithim;
+    public int              maxUnitsInTeam; 
     public BoardBehaviour   boardBehaviour;
-    Actions<ArmyAction>     possibleActions;
-    UCB1<ArmyAction>        teamFormerUCB1 = null;
-    RegretMatching<ArmyAction> teamFormerRM = null;
-    ArmyAction              selfFormationUCB1; 
-    ArmyAction              selfFormationRM;
-    Strips                  decisionMaker;
+    
     static AIController     instance;
+
+    Actions<ArmyAction>     possibleActions;
+    ArmyAction              selfFormation; 
+    Strips                  decisionMaker;
+    AIAlgorithim<ArmyAction> teamFormer = null;
+
+
 
     int score;    
 
 
-    public static AIController Get() => instance;
-    public int GetMaxUnitsInTeam() => maxUnitsInTeam;
-    public UCB1<ArmyAction> GetUCB1TeamFormer() => teamFormerUCB1;
-    public RegretMatching<ArmyAction> GetRMTeamFormer() => teamFormerRM;
-    public uint GetPossibleActionsCount() => possibleActions.GetCount();
+    public static AIController Get()                    => instance;
+    public int GetMaxUnitsInTeam()                      => maxUnitsInTeam;
+    public AIAlgorithim<ArmyAction> GetTeamFormer()     => teamFormer;
+    public uint GetPossibleActionsCount()               => possibleActions.GetCount();
     
     public AIController Create()
     {
@@ -65,8 +67,8 @@ public class AIController : MonoBehaviour
     
     public void OnBattleEnd(ArmyAction oponentFormation, int score)
     {
-        teamFormerUCB1.UpdateUtility(selfFormationUCB1, oponentFormation, score);
-        int utility = teamFormerUCB1.GetUtilityOf(selfFormationUCB1, oponentFormation);
+        teamFormer.UpdateUtility(selfFormation, oponentFormation, score);
+        int utility = teamFormer.GetUtilityOf(selfFormation, oponentFormation);
 
         if (utility < 0)
         {
@@ -81,13 +83,12 @@ public class AIController : MonoBehaviour
             PlayerController.Get().UpdateScore(utility);
         }
         
-        teamFormerUCB1.UpdateValues(oponentFormation);
-        teamFormerRM.UpdateValues(oponentFormation);
+        teamFormer.UpdateValues(oponentFormation);
     }
 
     public void InterpreateFormation()
     {
-        ArmyAction formation  = selfFormationUCB1;
+        ArmyAction formation  = selfFormation;
         foreach (Unit unit in formation.GetUnits())
         {
             int cellDataRelativeX = BoardData.Get().GetColumns() - unit.GetPosition().GetX() - 1;
@@ -111,19 +112,59 @@ public class AIController : MonoBehaviour
         Create();
         
         possibleActions = new Actions<ArmyAction>(maxUnitsInTeam);
-        teamFormerUCB1  = new UCB1<ArmyAction>(possibleActions);
-        teamFormerRM    = new RegretMatching<ArmyAction>(possibleActions);
+        
+        switch(formationAlgorithim)
+        {
+            case FormationAlgorithims.UCB1:
+            teamFormer = new UCB1<ArmyAction>(possibleActions);
+            break;
+
+            case FormationAlgorithims.RegretMatching:
+            teamFormer = new RegretMatching<ArmyAction>(possibleActions);
+            break;
+        }
+        
+        decisionMaker   = new Strips();
 
         ChooseFormation();
     }
+
     void ChooseFormation()
     {
-        selfFormationUCB1   = teamFormerUCB1.Play();
-        selfFormationRM     = teamFormerRM.Play();
+        selfFormation = teamFormer.Play();
+    }
+
+    void StartBattle()
+    {
 
     }
     void UpdateScore (int newScore) => this.score += newScore;
 
+    void UpdateXML()
+    {
+        
+    }
+
+    void CreateOperators()
+    {
+        List<OperatorStrips> operators      = new List<OperatorStrips>();
+
+        PropertyStrips formationChoosen     = new PropertyStrips("formationChoosen");
+        OperatorStrips toChooseFormation    = new OperatorStrips(null, formationChoosen,"ChooseFormation");
+        operators.Add(toChooseFormation);
+        
+        PropertyStrips battled              = new PropertyStrips("battled");
+        OperatorStrips toBattle             = new OperatorStrips(formationChoosen, battled,"StartBattle");
+        operators.Add(toBattle);
+        
+        PropertyStrips scoreUpdated         = new PropertyStrips("scoreUpdated");
+        OperatorStrips toUpdateScore        = new OperatorStrips(battled, scoreUpdated,"");
+        operators.Add(toUpdateScore);
+
+        PropertyStrips goal                 = new PropertyStrips("Goal");
+        OperatorStrips toUpdateXML          = new OperatorStrips(scoreUpdated, goal,"UpdateXML");
+        operators.Add(toUpdateXML);
+    }
 
 
 }

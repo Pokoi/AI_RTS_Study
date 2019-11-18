@@ -56,6 +56,14 @@ public class Strips
         }
     }
 
+    public void AddOperator(OperatorStrips newOperator)
+    {
+        if(!operators.Contains(newOperator))
+        {
+         operators.Add(newOperator);
+        }
+    }
+
     public string GetNextAction()
     {   
         desiredTags.Add("Goal");
@@ -81,31 +89,28 @@ public class Strips
                     ownedTags.Add(property.GetTag());
                 }
 
-                int iterator = 0;
-
-                List <PropertyStrips> added_conditions = stripsOperator.GetAddedProperties();  
+                PropertyStrips added_condition = stripsOperator.GetAddedProperty();  
                 
-                for (iterator = 0; iterator < stripsOperator.GetAddedProperties().Count; iterator++)
+                if (desiredTags.Contains(added_condition.GetTag()) && !currentPlan.Contains(stripsOperator))
                 {
-                    if (desiredTags.Contains(added_conditions[iterator].GetTag()) && !currentPlan.Contains(stripsOperator))
+                    currentPlan.Add(stripsOperator);
+                    
+                    PropertyStrips condition = stripsOperator.GetPrecondition();
+                    
+                    if (!ownedTags.Contains(condition.GetTag()))
                     {
-                        currentPlan.Add(stripsOperator);
-                        foreach (PropertyStrips condition in stripsOperator.GetPreconditions()) 
-                        {
-                            if (!ownedTags.Contains(condition.GetTag()))
-                            {
-                                 desiredTags.Add(condition.GetTag());    
-                            }
-                        }                        
-                        foreach (PropertyStrips added in stripsOperator.GetAddedProperties()) 
-                        {
-                            if (desiredTags.Contains(added.GetTag())) 
-                            {
-                                desiredTags.Remove(added.GetTag());
-                            }
-                        }
+                        desiredTags.Add(condition.GetTag());    
                     }
-                }            
+                                          
+                    PropertyStrips added = stripsOperator.GetAddedProperty(); 
+                    
+                    if (desiredTags.Contains(added.GetTag())) 
+                    {
+                        desiredTags.Remove(added.GetTag());
+                    }
+                    
+                }
+                           
             }
             
         }
@@ -125,20 +130,19 @@ public class PropertyStrips
 
 public class OperatorStrips
 {
-    private List<PropertyStrips> preconditions;
-    private List<PropertyStrips> addedProperties;
-    private List<PropertyStrips> eliminatedProperties;
+    private PropertyStrips precondition;
+    private PropertyStrips addedProperty;
 
     string functionName;
 
-    public OperatorStrips(List<PropertyStrips> preconditions, string resultTag, string functionName)
+    public OperatorStrips(PropertyStrips precondition, PropertyStrips addedProperty, string functionName)
     {
-        this.preconditions   = preconditions;
-        this.addedProperties = new List<PropertyStrips>{new PropertyStrips(resultTag)};
+        this.precondition    = precondition;
+        this.addedProperty   = addedProperty;
         this.functionName    = functionName;
     }
 
-    public List<PropertyStrips> GetAddedProperties()    => addedProperties;
-    public List<PropertyStrips> GetPreconditions()      => preconditions;
-    public string GetFunctionName()                     => functionName;
+    public PropertyStrips GetAddedProperty()    => addedProperty;
+    public PropertyStrips GetPrecondition()     => precondition;
+    public string GetFunctionName()             => functionName;
 }

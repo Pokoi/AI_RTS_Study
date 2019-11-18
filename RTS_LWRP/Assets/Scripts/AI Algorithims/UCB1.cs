@@ -50,7 +50,7 @@ public class UCB1 <T> : AIAlgorithim <T> where T : Action
         UCB1scoresByAction          = new float [totalAvailableActions];
     }
 
-    public T Play() => GetNextAction();
+    public override T Play() => GetNextAction();
 
     public override T GetNextAction()
     {
@@ -89,7 +89,7 @@ public class UCB1 <T> : AIAlgorithim <T> where T : Action
         return averageUtility + Mathf.Sqrt(2 + Mathf.Log10(totalActions) / count);
     }
 
-    public void UpdateValues (T oponentAction)
+    public override void UpdateValues (T oponentAction)
     {
         playedRounds++;
         float utility;

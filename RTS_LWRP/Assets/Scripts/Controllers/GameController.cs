@@ -55,7 +55,7 @@ public class GameController : MonoBehaviour
     private void Start() 
     {
         CreateFormationVariablesXml();
-        ReadAlgorithimXml();
+       // ReadAlgorithimXml();
         Invoke("OnPlayerDecideFormation", 3);
         Invoke("OnStartBattle", 6);
         Invoke("OnGameEnds", 7);
@@ -95,7 +95,7 @@ public class GameController : MonoBehaviour
         aiController.OnBattleEnd(playerController.GetPlayerFormation(), score); 
 
         // Update XML file
-        UCB1ObjectData.utility = aiController.GetUCB1TeamFormer().GetUtility();
+        UCB1ObjectData.utility = aiController.GetTeamFormer().GetUtility();
     }
 
     private void OnGameEnds()
@@ -172,6 +172,7 @@ public class GameController : MonoBehaviour
     private void ReadAlgorithimXml()
     {
         UCB1ObjectData = XmlManaging.ReadFile<XmlUCB1ObjectData>(formationVariablesXMLData.UCB1ObjectDataPath);
-        aiController.GetUCB1TeamFormer().SetUtility(UCB1ObjectData.utility);
+        aiController.GetTeamFormer().SetUtility(UCB1ObjectData.utility);
     }
+    
 }

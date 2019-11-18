@@ -48,7 +48,8 @@ public class AIAlgorithim <T> where T : Action
         }
 
     }
-
+    public virtual T Play() => null;
+    public virtual void UpdateValues (T oponentAction) {}
     public virtual T GetNextAction () => default(T);
 
     public void UpdateUtility(T selfAction, T oponentAction, int score)
