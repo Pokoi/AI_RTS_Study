@@ -6,13 +6,13 @@ public class LookAtCamera : MonoBehaviour
 {
     public float secondsBetweenRefresh = 0.25f;
 
-    Transform transformToFace;
+    public Transform transformToFace;
     Transform cameraTransform;
 
     // Start is called before the first frame update
     void Start()
     {
-        transformToFace = transform;
+    
         cameraTransform = Camera.main.transform;
         StartCoroutine(FacingToCamera(secondsBetweenRefresh));
     }

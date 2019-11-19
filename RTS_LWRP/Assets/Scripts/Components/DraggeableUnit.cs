@@ -79,7 +79,14 @@ public class DraggeableUnit : MonoBehaviour
 
             if(PlayerController.Get().UnitInEmptyPosition(placedUnit))
             {
-                transform.position  = lastCellCollidedWith.transform.position;
+                
+                float yModifier     = 0.5f;
+                transform.position  = new Vector3 (
+                                                    lastCellCollidedWith.transform.position.x, 
+                                                    lastCellCollidedWith.transform.position.y + yModifier,
+                                                    lastCellCollidedWith.transform.position.z
+                                                );
+
                 this.followCursorComponent.StopMoving();
                 
                 thisSoldier.SetUnit(placedUnit);

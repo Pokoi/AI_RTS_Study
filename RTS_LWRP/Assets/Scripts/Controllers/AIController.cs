@@ -54,6 +54,7 @@ public class AIController : MonoBehaviour
     public int GetMaxUnitsInTeam()                      => maxUnitsInTeam;
     public AIAlgorithim<ArmyAction> GetTeamFormer()     => teamFormer;
     public uint GetPossibleActionsCount()               => possibleActions.GetCount();
+    public FormationAlgorithims GetFormationAlgorithim()  => formationAlgorithim;
     
     public AIController Create()
     {
@@ -125,22 +126,25 @@ public class AIController : MonoBehaviour
         }
         
         decisionMaker   = new Strips();
-
-        ChooseFormation();
     }
 
-    void ChooseFormation()
+    void ToChooseFormation()
     {
         selfFormation = teamFormer.Play();
     }
 
-    void StartBattle()
+    void ToStartBattle()
     {
 
     }
     void UpdateScore (int newScore) => this.score += newScore;
 
-    void UpdateXML()
+    void ToUpdateXML()
+    {
+        
+    }
+
+    void ToUpdateScore()
     {
         
     }
@@ -150,19 +154,19 @@ public class AIController : MonoBehaviour
         List<OperatorStrips> operators      = new List<OperatorStrips>();
 
         PropertyStrips formationChoosen     = new PropertyStrips("formationChoosen");
-        OperatorStrips toChooseFormation    = new OperatorStrips(null, formationChoosen,"ChooseFormation");
+        OperatorStrips toChooseFormation    = new OperatorStrips(null, formationChoosen,"ToChooseFormation");
         operators.Add(toChooseFormation);
         
         PropertyStrips battled              = new PropertyStrips("battled");
-        OperatorStrips toBattle             = new OperatorStrips(formationChoosen, battled,"StartBattle");
+        OperatorStrips toBattle             = new OperatorStrips(formationChoosen, battled,"ToStartBattle");
         operators.Add(toBattle);
         
         PropertyStrips scoreUpdated         = new PropertyStrips("scoreUpdated");
-        OperatorStrips toUpdateScore        = new OperatorStrips(battled, scoreUpdated,"");
+        OperatorStrips toUpdateScore        = new OperatorStrips(battled, scoreUpdated,"ToUpdateScore");
         operators.Add(toUpdateScore);
 
         PropertyStrips goal                 = new PropertyStrips("Goal");
-        OperatorStrips toUpdateXML          = new OperatorStrips(scoreUpdated, goal,"UpdateXML");
+        OperatorStrips toUpdateXML          = new OperatorStrips(scoreUpdated, goal,"ToUpdateXML");
         operators.Add(toUpdateXML);
     }
 

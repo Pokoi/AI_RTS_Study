@@ -39,6 +39,10 @@ public class RegretMatching <T> : AIAlgorithim <T> where T : Action
     public T last_action;
     public uint num_actions;
 
+    public float [] GetRegret() => regret;
+    public float [] GetChance() => chance;
+    public void SetRegret(float [] regret) => this.regret = regret;
+    public void SetChance(float [] chance) => this.chance = chance;
     public RegretMatching(Actions<T> _possibleActions) : base (_possibleActions)
     {
         num_actions = _possibleActions.GetCount();
@@ -46,8 +50,7 @@ public class RegretMatching <T> : AIAlgorithim <T> where T : Action
         chance      = new float[num_actions];
     }
 
-
-    public T Play() => GetNextAction();
+    public override T Play() => GetNextAction();
 
     public override T GetNextAction()
     {
@@ -86,7 +89,7 @@ public class RegretMatching <T> : AIAlgorithim <T> where T : Action
         return last_action;
     }
 
-    public void UpdateValues(T oponentAction)
+    public override void UpdateValues(T oponentAction)
     {
         for (int i = 0; i < num_actions; ++i)
         {
