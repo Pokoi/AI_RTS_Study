@@ -38,6 +38,9 @@ public class DraggeableUnit : MonoBehaviour
     FollowCursor followCursorComponent;
     Cell lastCellCollidedWith;
 
+
+    public FollowCursor GetFollowCursorComponent() => followCursorComponent;
+
     private void Start()
     {
         AddFollowCursorComponent();    

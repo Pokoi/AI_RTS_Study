@@ -97,7 +97,7 @@ public class Strips
                     
                     PropertyStrips condition = stripsOperator.GetPrecondition();
                     
-                    if (!ownedTags.Contains(condition.GetTag()))
+                    if (condition != null && !ownedTags.Contains(condition.GetTag()))
                     {
                         desiredTags.Add(condition.GetTag());    
                     }

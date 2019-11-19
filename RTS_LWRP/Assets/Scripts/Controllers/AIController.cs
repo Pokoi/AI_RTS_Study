@@ -103,8 +103,9 @@ public class AIController : MonoBehaviour
             
             AI_unit.SetActive(true);
             AI_unit.GetComponent<Soldier>().SetUnitType(AI_unitUnitType);
+            AI_unit.GetComponent<DraggeableUnit>().enabled = false;
             
-            AI_unit.transform.position = cellDataWorldPosition;
+            AI_unit.transform.position = new Vector3 (cellDataWorldPosition.x, cellDataWorldPosition.y + 0.5f, cellDataWorldPosition.z);
         }
     }
 
@@ -112,6 +113,9 @@ public class AIController : MonoBehaviour
     {
         Create();
         
+        decisionMaker   = new Strips();
+        CreateOperators();
+
         possibleActions = new Actions<ArmyAction>(maxUnitsInTeam);
         
         switch(formationAlgorithim)
@@ -125,7 +129,8 @@ public class AIController : MonoBehaviour
             break;
         }
         
-        decisionMaker   = new Strips();
+        Invoke(decisionMaker.GetNextAction(), 0);
+        
     }
 
     void ToChooseFormation()
@@ -168,6 +173,11 @@ public class AIController : MonoBehaviour
         PropertyStrips goal                 = new PropertyStrips("Goal");
         OperatorStrips toUpdateXML          = new OperatorStrips(scoreUpdated, goal,"ToUpdateXML");
         operators.Add(toUpdateXML);
+
+        foreach (OperatorStrips stripOperator in operators)
+        {
+            decisionMaker.AddOperator(stripOperator);
+        }
     }
 
 
