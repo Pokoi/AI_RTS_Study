@@ -1,6 +1,6 @@
 ﻿/*
- * File: Soldier.cs
- * File Created: Thursday, 14th November 2019 3:05:40 pm
+ * File: BattleDecisionMaker.cs
+ * File Created: Wednesday, 20th November 2019 10:02:48 am
  * ––––––––––––––––––––––––
  * Author: Jesus Fermin, 'Pokoi', Villar  (hello@pokoidev.com)
  * ––––––––––––––––––––––––
@@ -27,27 +27,42 @@
  * SOFTWARE.
  */
 
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Soldier : MonoBehaviour
+public class BattleDecisionMaker 
 {
-    Unit unit;
-    UnitType unitType;
-    BattleDecisionMaker battleDecisionMaker;
+    Soldier selfSoldier;
+    byte remainingHealthWeight  = 1;
+    byte damageDoneWeight       = 2;
+    byte distanceWeight         = 1;
 
-    public void SetUnit(Unit unit) => this.unit = unit;
-    public Unit GetUnit() => this.unit;
+    public BattleDecisionMaker(Soldier selfSoldier) => this.selfSoldier = selfSoldier;
 
-    public void SetUnitType(UnitType unitType) => this.unitType = unitType;
-    public UnitType GetUnitType() => this.unitType;
+    public Soldier ChooseSoldierToAttack(List<Soldier> soldiers)
+    {
+        int bestHeuristic   = 0;
+        Soldier bestSoldier = null;
 
-    public CellData GetPosition() => unit.GetPosition();
-    public int GetHealth()      => unit.GetUnitData().GetBehaviour().GetHealth();
-    public int GetTotalHealth() => unit.GetUnitData().GetBehaviour().GetTotalHealth();
-    public int GetDamageDone()  => unit.GetUnitData().GetBehaviour().GetDamageDone();
+        foreach(Soldier soldier in soldiers)
+        {
+            int soldierHeuristic = CalculateHeuristics(soldier);
+            if (soldierHeuristic > bestHeuristic)
+            {
+                bestHeuristic = soldierHeuristic;
+                bestSoldier   = soldier;
+            }
+        }
 
-    private void Start()        =>  battleDecisionMaker = new BattleDecisionMaker(this);
-
+        return bestSoldier;
+    }
+    private int CalculateHeuristics( Soldier soldier)
+    {
+       return (int) (remainingHealthWeight  *  (soldier.GetHealth() / soldier.GetTotalHealth()) +
+                     damageDoneWeight       * soldier.GetDamageDone() +
+                     distanceWeight         * (Vector3.Distance(selfSoldier.transform.position, soldier.transform.position))
+                    );
+    }
 }

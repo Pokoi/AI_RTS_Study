@@ -34,13 +34,17 @@ using UnityEngine;
 public abstract class UnitBehaviour
 {
     protected int health;
+    protected int totalHealth;
     protected int damage;
     protected int actionSpeed;
+    protected int damageDone;
 
 
     public abstract void Attack();
     public abstract void GetDamage();
 
-    public virtual int GetHealth() => health;
+    public virtual int GetHealth()      => health;
+    public virtual int GetTotalHealth() => totalHealth;
+    public virtual int GetDamageDone()  => damageDone;
 
 }
