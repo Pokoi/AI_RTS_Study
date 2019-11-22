@@ -167,6 +167,7 @@ public class CellData
         //Left
         toReturn[3] =  this.GetY() > 0           ? boardData.GetCellDataAt(this.GetX(), this.GetY()-1) : null;
 
+
         return toReturn;
     }
     

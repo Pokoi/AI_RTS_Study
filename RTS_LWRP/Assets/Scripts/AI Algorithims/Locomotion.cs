@@ -34,37 +34,108 @@ using UnityEngine;
 
 public class Locomotion
 {
-    Transform cachedTransform;
-    float speed;
-
-    public Locomotion(Transform cachedTransform) => this.cachedTransform = cachedTransform;
- 
+    Transform   cachedTransform;
+    float       speed;
+    AStarSearch AStar;
+    Soldier     soldierGoal;
+    int         movementRange;
+    
     public enum MoveDirection
     {
         Up, Left, Down, Right, None
     }
 
-    private void MoveLeft()
+    public Locomotion(Transform cachedTransform)
     {
-       
+        this.cachedTransform = cachedTransform;
+        AStar                = new AStarSearch();
+    }
+ 
+    public void Move(Soldier soldierGoal, int range)
+    {   
+        this.soldierGoal             = soldierGoal;
+        this.movementRange           = range;
+        CellData soldierGoalPosition = soldierGoal.GetPosition();
+        CellData currentPosition     = cachedTransform.GetComponent<Soldier>().GetPosition();
+
+        AStar.SetSearching();
+
+        while(!IsInRange(currentPosition, soldierGoalPosition, range))
+        {
+            switch(AStar.GetNextMove(currentPosition, soldierGoalPosition))
+            {
+                case Locomotion.MoveDirection.Up:    MoveUp(currentPosition);    break;
+                case Locomotion.MoveDirection.Right: MoveRight(currentPosition); break;
+                case Locomotion.MoveDirection.Left:  MoveLeft(currentPosition);  break;
+                case Locomotion.MoveDirection.Down:  MoveDown(currentPosition);  break;
+            }
+        }
+    }
+    
+    public bool IsInRange(CellData currentCellData, CellData goal, int range)
+    {
+        int currentY = currentCellData.GetY();
+        int currentX = currentCellData.GetX();
+        int desiredY = goal.GetY();
+        int desiredX = goal.GetX();
+        int deltaY   = Mathf.Abs(currentY - desiredY);
+        int deltaX   = Mathf.Abs(currentX - desiredX);
+
+        return (deltaY <= range) && (deltaX <= range);
     }
 
-    private void MoveRight()
+    private void MoveLeft(CellData currentPosition)
     {
-
-    }
-
-    private void MoveUp()
-    {
-
-    }
-
-    private void MoveDown()
-    {
+        BoardData boardData   = BoardData.Get();
+        CellData  desiredCell = boardData.GetCellDataAt(currentPosition.GetY(), currentPosition.GetX() - 1);
         
+        MoveTo(desiredCell, currentPosition);
     }
 
-    IEnumerator Moving(Vector3 movingTo)
+    private void MoveRight(CellData currentPosition)
+    {
+        BoardData boardData   = BoardData.Get();
+        CellData  desiredCell = boardData.GetCellDataAt(currentPosition.GetY(), currentPosition.GetX() + 1);
+        
+        MoveTo(desiredCell, currentPosition);
+    }
+
+    private void MoveUp(CellData currentPosition)
+    {
+        BoardData boardData   = BoardData.Get();
+        CellData  desiredCell = boardData.GetCellDataAt(currentPosition.GetY() + 1, currentPosition.GetX());
+        
+        MoveTo(desiredCell, currentPosition);
+    }
+
+    private void MoveDown(CellData currentPosition)
+    {
+        BoardData boardData   = BoardData.Get();
+        CellData  desiredCell = boardData.GetCellDataAt(currentPosition.GetY() - 1, currentPosition.GetX());
+        
+        MoveTo(desiredCell, currentPosition);
+    }
+
+    private void MoveTo(CellData desiredCell, CellData currentPosition)
+    {
+        if(desiredCell.IsEmpty())
+        {
+            Vector3 desiredCellPosition = BoardBehaviour.Get().GetWorldPositionOfCell(desiredCell);
+            Vector3 destination         = new Vector3 (desiredCellPosition.x, cachedTransform.position.y, desiredCellPosition.z);
+            
+            currentPosition.SetEmpty(true);
+            desiredCell.SetEmpty(false);
+
+            GameController.Get().StartCoroutine(this.MovingToCell(destination));
+        }
+        else
+        {
+            Move(soldierGoal, movementRange);
+        }
+    }
+
+
+    IEnumerator MovingToCell(Vector3 movingTo)
     {
         while(Vector3.Distance(cachedTransform.position, movingTo) > float.Epsilon)
         {
@@ -72,4 +143,5 @@ public class Locomotion
             yield return new WaitForEndOfFrame();
         }
     }
+
 }

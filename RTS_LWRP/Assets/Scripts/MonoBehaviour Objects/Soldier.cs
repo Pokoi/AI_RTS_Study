@@ -36,6 +36,7 @@ public class Soldier : MonoBehaviour
     Unit unit;
     UnitType unitType;
     BattleDecisionMaker battleDecisionMaker;
+    Locomotion locomotion;
 
     public void SetUnit(Unit unit) => this.unit = unit;
     public Unit GetUnit() => this.unit;
@@ -48,6 +49,10 @@ public class Soldier : MonoBehaviour
     public int GetTotalHealth() => unit.GetUnitData().GetBehaviour().GetTotalHealth();
     public int GetDamageDone()  => unit.GetUnitData().GetBehaviour().GetDamageDone();
 
-    private void Start()        =>  battleDecisionMaker = new BattleDecisionMaker(this);
+    private void Start() 
+    {
+        battleDecisionMaker = new BattleDecisionMaker(this);
+        locomotion          = new Locomotion(transform);
+    }
 
 }

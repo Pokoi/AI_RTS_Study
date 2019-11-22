@@ -63,6 +63,8 @@ public class AStarSearch
         return Locomotion.MoveDirection.None;
     }
 
+    public void SetSearching() => currentPhase = Phases.Searching;
+
     private Node Search(CellData initialPosition, CellData goal)
     {
         openList = new List<Node>();
@@ -169,7 +171,7 @@ public class Node
 
         for (int iterator = 0; iterator < neighbours.Length; iterator++)
         {
-            if (neighbours[iterator] != null)
+            if (neighbours[iterator] != null && neighbours[iterator].IsEmpty())
             {
                 switch (iterator)
                 {

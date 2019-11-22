@@ -36,10 +36,12 @@ public class BoardBehaviour : MonoBehaviour
     [SerializeField] byte boardRows = 0, boardColumns = 0;
     [SerializeField] GameObject cellPrefab = null;
     
-    //Components
     BoardData boardData;
     Transform cachedTransform;
 
+    static BoardBehaviour instance;
+    
+    public static BoardBehaviour Get() => instance;
     public Vector3 GetWorldPositionOfCell(CellData cell)
     {
         byte    localX          = cell.GetX();
@@ -58,6 +60,7 @@ public class BoardBehaviour : MonoBehaviour
         cachedTransform             = transform;
         cachedTransform.position    = Vector3.zero;
         boardData                   = BoardData.Create(boardColumns, boardRows);
+        instance                    = this;
     }
 
     private void Start() => InstantiateBoard();
