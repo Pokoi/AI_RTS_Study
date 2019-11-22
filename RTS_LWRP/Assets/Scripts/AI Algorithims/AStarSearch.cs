@@ -47,12 +47,12 @@ public class AStarSearch
 
     public AStarSearch() => currentPhase = Phases.Searching;
 
-    public Locomotion.MoveDirection GetNextMove(CellData currentPos, CellData[] goals)
+    public Locomotion.MoveDirection GetNextMove(CellData currentPos, CellData goal)
     {
         switch (currentPhase)
         {
             case Phases.Searching: 
-                SetMovements(Search(currentPos, goals)); 
+                SetMovements(Search(currentPos, goal)); 
             break;
             case Phases.PathFound: 
                 return ReadActions();
@@ -63,7 +63,7 @@ public class AStarSearch
         return Locomotion.MoveDirection.None;
     }
 
-    private Node Search(CellData initialPosition, CellData[] goals)
+    private Node Search(CellData initialPosition, CellData goal)
     {
         openList = new List<Node>();
         openList.Add(new Node(null, initialPosition, Locomotion.MoveDirection.None));
@@ -72,7 +72,6 @@ public class AStarSearch
         {
             Node node = null;
 
-            //Get the node in the open_list with the lowest G value
             foreach (Node n in openList)
             {
                 if (node == null || n.GetF() < node.GetF())
@@ -81,16 +80,16 @@ public class AStarSearch
 
             openList.Remove(node);
 
-            if (IsGoal(node, goals)) return node;
+            if (IsGoal(node, goal)) return node;
             
-            node.UpdateValues(goals[0], g);
-            g = node.GetG;
+            node.UpdateValues(goal, g);
+            g = node.GetG();
             
-            foreach (var child in node.Expand())
+            foreach (Node child in node.Expand())
             {
                 if (!InList(child))
                 {
-                    child.UpdateValues(goals[0], g);
+                    child.UpdateValues(goal, g);
                     openList.Add(child);
                 }
             }
@@ -109,33 +108,31 @@ public class AStarSearch
         return movement_to_return;
     }
 
-    private bool IsGoal(Node _node, ref CellInfo[] goals)
-    {
-        int iterator;
-        for (iterator = 0; iterator < goals.Length && goals[iterator] != _node.GetCell; iterator++) ;
-
-        return iterator < goals.Length;
-    }
-
-    private void SetMovements(Node _final_node)
+    private bool IsGoal(Node node, CellData goal) => node.GetCell() == goal;
+  
+    private void SetMovements(Node finalNode)
     {
         movements = new List<Locomotion.MoveDirection>();
-        while (_final_node.GetParent != null)   
+        while (finalNode.GetParent() != null)   
         {
-            movements.Add(_final_node.GetActionNeeded);
-            _final_node = _final_node.GetParent;
+            movements.Add(finalNode.GetActionNeeded());
+            finalNode = finalNode.GetParent();
         }
         movements.Reverse();
         currentPhase = Phases.PathFound;
     }
 
-    private bool InList(Node n)
+    private bool InList(Node node)
     {
-        bool is_in_list = false;
+        foreach (Node n in openList)
+        {
+            if (node.GetCell() == n.GetCell())
+            { 
+                return true;
+            }
+        }
 
-        foreach (Node _n in openList) if (_n.GetCell == n.GetCell) is_in_list = true;
-
-        return is_in_list;
+        return false;
     }
 
 }

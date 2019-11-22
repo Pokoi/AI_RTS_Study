@@ -153,7 +153,21 @@ public class CellData
 
     public CellData [] Expand()
     {
-        
+        CellData[]  toReturn    = new CellData[4];
+        BoardData   boardData   = BoardData.Get();
+        int         columns     = boardData.GetColumns();
+        int         rows        = boardData.GetRows();
+
+        //Up
+        toReturn[0] =  this.GetX() < (columns-1) ? boardData.GetCellDataAt(this.GetX()+1, this.GetY()) : null;
+        //Right
+        toReturn[1] =  this.GetY() < (rows-1)    ? boardData.GetCellDataAt(this.GetX(), this.GetY()+1) : null;
+        //Down
+        toReturn[2] =  this.GetX() > 0           ? boardData.GetCellDataAt(this.GetX()-1, this.GetY()) : null;
+        //Left
+        toReturn[3] =  this.GetY() > 0           ? boardData.GetCellDataAt(this.GetX(), this.GetY()-1) : null;
+
+        return toReturn;
     }
     
 }
