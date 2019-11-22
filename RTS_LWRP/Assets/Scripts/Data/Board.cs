@@ -95,6 +95,8 @@ public class CellData
 {
     Vector2 index; 
     VisibleItem visibleItem;
+    bool empty = true;
+
     public CellData (byte x, byte y)
     {
         this.index          = new Vector2 (x, y);
@@ -105,12 +107,13 @@ public class CellData
     public byte         GetY()              => (byte) index.y;
     public Vector2      GetPosition()       => this.index;
     public VisibleItem  GetVisibleItem()    => this.visibleItem;
+    public bool         IsEmpty()           => this.empty;
+    public bool         SetEmpty(bool empty) => this.empty = empty;
 
     public static bool operator == (CellData thisCell, CellData otherCell)
     {
         return thisCell.GetPosition() == otherCell.GetPosition();
     }
-
     public static bool operator != (CellData thisCell, CellData otherCell) => !(thisCell == otherCell);  
     public static CellData operator ++(CellData thisCell)
     {
@@ -146,6 +149,11 @@ public class CellData
         }
 
         return boardData.GetCellDataAt(newX, newY);
+    }
+
+    public CellData [] Expand()
+    {
+        
     }
     
 }

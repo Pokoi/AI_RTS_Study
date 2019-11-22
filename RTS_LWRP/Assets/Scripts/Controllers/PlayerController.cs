@@ -95,29 +95,6 @@ public class PlayerController : MonoBehaviour
         }        
     }
 
-    public bool UnitInEmptyPosition(Unit u)
-    {
-        if(playerFormation is null)
-        {
-            playerFormation = new ArmyAction(AIController.Get().GetMaxUnitsInTeam());
-        }
-
-        if(!(playerFormation.GetUnits() is null) && choosenUnitsCount > 0)
-        {
-            Unit[] units = playerFormation.GetUnits();
-
-            for(int index = choosenUnitsCount; index > 0; --index)
-            {
-                if(units[index-1].GetPosition() == u.GetPosition())
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
     public ArmyAction GetPlayerFormation() => playerFormation;
 
     private void Start() 

@@ -101,6 +101,8 @@ public class AIController : MonoBehaviour
             UnitType    AI_unitUnitType = unit.GetUnitData().GetType();
             GameObject  AI_unit         = GameController.Get().unitsPool.GetUnitInstance(AI_unitUnitType);
             
+            relativeCellData.SetEmpty(false);
+
             AI_unit.SetActive(true);
             AI_unit.GetComponent<Soldier>().SetUnitType(AI_unitUnitType);
             AI_unit.GetComponent<DraggeableUnit>().enabled = false;

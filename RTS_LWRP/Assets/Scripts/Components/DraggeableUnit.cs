@@ -80,9 +80,8 @@ public class DraggeableUnit : MonoBehaviour
             CellData    targetCellData  = lastCellCollidedWith.GetComponent<Cell>().GetBehaviour().GetCellData();
             Unit        placedUnit      = new Unit(targetCellData, new UnitData(thisSoldier.GetUnitType())); 
 
-            if(PlayerController.Get().UnitInEmptyPosition(placedUnit))
+            if(targetCellData.IsEmpty())
             {
-                
                 float yModifier     = 0.5f;
                 transform.position  = new Vector3 (
                                                     lastCellCollidedWith.transform.position.x, 
@@ -94,7 +93,7 @@ public class DraggeableUnit : MonoBehaviour
                 
                 thisSoldier.SetUnit(placedUnit);
                 PlayerController.Get().AddUnitToFormation(placedUnit);
-
+                targetCellData.SetEmpty(false);
                 draggingUnit = false;
             }
         }
