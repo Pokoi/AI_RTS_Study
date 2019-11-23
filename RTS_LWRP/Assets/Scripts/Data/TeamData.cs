@@ -48,6 +48,7 @@ public class TeamData
     public int      GetScore()          => this.teamScore;
     public void     SetScore(int score) => this.teamScore += score;
     public Owners   GetOwner()          => this.owner;
+    public void     ClearSoldiers()     => this.teamSoldiers.Clear();
     public List<Soldier> GetSoldiers()  => this.teamSoldiers;
     public void AddSoldier(Soldier soldier) 
     {
@@ -61,6 +62,40 @@ public class TeamData
         {
             GameController.Get().OnBattleEnds();
         }
+        if(CheckIfOnlyLastAHealer())
+        {
+            switch(owner)
+            {
+                case Owners.AI:
+                    if (GameController.Get().GetPlayerTeamData().CheckIfOnlyLastAHealer())
+                    {
+                        GameController.Get().OnBattleEnds();
+                    }
+                break;
+                case Owners.Player:
+                    if (GameController.Get().GetAITeamData().CheckIfOnlyLastAHealer())
+                    {
+                        GameController.Get().OnBattleEnds();
+                    }
+                break;
+            }
+        }
+    }
+
+    public bool CheckIfOnlyLastAHealer()
+    {
+        if(teamSoldiers.Count == 1)
+        {
+            foreach (Soldier soldier in teamSoldiers)
+            {
+                if (!(soldier is null) && soldier.GetUnitType() == UnitType.healer)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 }

@@ -55,7 +55,14 @@ public class Soldier : MonoBehaviour
     public int      GetHealth()      => unit.GetUnitData().GetBehaviour().GetHealth();
     public int      GetTotalHealth() => unit.GetUnitData().GetBehaviour().GetTotalHealth();
     public int      GetDamageDone()  => unit.GetUnitData().GetBehaviour().GetDamageDone();
-
+    public void     Reset()          
+    {
+        if(!(unit is null)) 
+        {
+            unit.GetUnitData().GetBehaviour().Reset();
+        }
+    } 
+        
     public void SetReadyToFight(bool readyToFight)
     {
         this.readyToFight = readyToFight;
@@ -163,7 +170,7 @@ public class Soldier : MonoBehaviour
             line.SetPosition(1, target.transform.position);
             
             behaviour.Attack(target);
-            yield return new WaitForSeconds(2 -  behaviour.GetActionSpeed());
+            yield return new WaitForSeconds( 1 - behaviour.GetActionSpeed());
             
             if(unitType == UnitType.healer)
             {

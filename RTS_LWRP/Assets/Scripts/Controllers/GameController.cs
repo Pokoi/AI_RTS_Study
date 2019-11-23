@@ -39,6 +39,8 @@ public class GameController : MonoBehaviour
     public AIController     aiController;
     public PlayerController playerController;
     public ScoreController  scoreController;
+
+    public GameObject FINISHTEXT;
     
     static GameController   instance;
 
@@ -97,7 +99,14 @@ public class GameController : MonoBehaviour
 
             }
 
-            OnGameEnds();
+            //-----------------------------------------------------------------------------------------------------------------------------------------------
+            // FOR AUTOMATIC KNOWLEDGE
+            unitsPool.Reset();
+            playerTeamData.ClearSoldiers();
+            AITeamData.ClearSoldiers();
+            OnStartBattle();
+            //-----------------------------------------------------------------------------------------------------------------------------------------------
+            //OnGameEnds();
         }
     }
 
@@ -116,7 +125,7 @@ public class GameController : MonoBehaviour
     {
         CreateFormationVariablesXml();
        // ReadAlgorithimXml();
-        Invoke("OnPlayerDecideFormation", 3);
+        //Invoke("OnPlayerDecideFormation", 3);
     }
     private void OnPlayerDecideFormation()
     {
@@ -131,6 +140,12 @@ public class GameController : MonoBehaviour
 
     public void OnStartBattle()
     {
+        //-----------------------------------------------------------------------------------------------------------------------------------------------
+        // FOR AUTOMATIC KNOWLEDGE
+        AIController.Get().DecideFormations();
+        callToEnd = false;
+        //-----------------------------------------------------------------------------------------------------------------------------------------------
+
         // Center the camera in the board
         BoardData   boardData               = BoardData.Get();
         Vector3     boardCenterCellPosition = boardBehaviour.GetWorldPositionOfCell(boardData.GetBoardCenterCell());
@@ -152,14 +167,12 @@ public class GameController : MonoBehaviour
         AIController.Get().OnBattleStart();
 
         
-        for(int i = 0; i < playerTeamData.GetSoldiers().Count; ++i)
+        for(int i = 0; i < AITeamData.GetSoldiers().Count; ++i)
         {
             playerTeamData.GetSoldiers()[i].ApplyBuff();
             AITeamData.GetSoldiers()[i].ApplyBuff();
         }
         
-
-        //Activate player battle ai 
         foreach (Soldier soldier in playerTeamData.GetSoldiers())
         {
             soldier.SetReadyToFight(true);
@@ -170,8 +183,10 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void OnGameEnds()
+    public void OnGameEnds()
     {
+
+        FINISHTEXT.SetActive(true);
        //Write the xml file
        UpdateXmL();
       
@@ -281,5 +296,10 @@ public class GameController : MonoBehaviour
         }
        
     }
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
+    // FOR AUTOMATIC KNOWLEDGE
+
+    public void SetPlayerFormation(ArmyAction formation) => playerController.SetPlayerFormation(formation);
     
 }

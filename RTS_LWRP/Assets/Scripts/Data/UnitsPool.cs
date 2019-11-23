@@ -40,6 +40,33 @@ public class UnitsPool : MonoBehaviour
     List<GameObject> healerUnits;
     int maxUnitsCount;
    
+    public void Reset()
+    {
+        foreach(GameObject go in meleeUnits)
+        {
+            go.SetActive(false);
+            go.GetComponent<Soldier>().Reset();
+        }
+
+        foreach(GameObject go in tankUnits)
+        {
+            go.SetActive(false);
+            go.GetComponent<Soldier>().Reset();
+        }
+
+        foreach(GameObject go in rangedUnits)
+        {
+            go.SetActive(false);
+            go.GetComponent<Soldier>().Reset();
+        }
+
+        foreach(GameObject go in healerUnits)
+        {
+            go.SetActive(false);
+            go.GetComponent<Soldier>().Reset();
+        }
+    }
+
     public void SetMaxUnitsCount(int maxUnitsCount) => this.maxUnitsCount = maxUnitsCount;
     public GameObject GetUnitInstance(UnitType unitType)
     {

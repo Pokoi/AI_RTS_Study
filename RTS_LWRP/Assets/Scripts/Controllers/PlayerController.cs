@@ -92,6 +92,7 @@ public class PlayerController : MonoBehaviour
     }
 
     public ArmyAction GetPlayerFormation() => playerFormation;
+    public ArmyAction SetPlayerFormation(ArmyAction formation) => playerFormation = formation;
 
     private void Start() => Create();
 

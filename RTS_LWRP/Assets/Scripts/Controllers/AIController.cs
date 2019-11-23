@@ -50,6 +50,7 @@ public class AIController : MonoBehaviour
     public uint                     GetPossibleActionsCount()   => possibleActions.GetCount();
     public Actions<ArmyAction>      GetPossibleActions()        => possibleActions;
     public FormationAlgorithims     GetFormationAlgorithim()    => formationAlgorithim;
+    public ArmyAction               GetFormation()              => selfFormation;
     
     public AIController Create()
     {
@@ -61,7 +62,12 @@ public class AIController : MonoBehaviour
         return instance;
     }
     
-    public void OnBattleStart()    => InterpretateFormation();
+    public void OnBattleStart()
+    {
+        InterpretateFormation();
+        InterpretatePlayerFormation();
+    }
+
     public void OnBattleEnd(ArmyAction oponentFormation, int score)
     {
         teamFormer.UpdateUtility(selfFormation, oponentFormation, score);
@@ -87,7 +93,7 @@ public class AIController : MonoBehaviour
             break;
         }
         
-        ChooseFormation();    
+        //ChooseFormation();    
     }
 
     void ChooseFormation()  => selfFormation = teamFormer.Play(); 
@@ -124,9 +130,62 @@ public class AIController : MonoBehaviour
         }
     }
 
-    void ToUpdateXML()
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
+    // FOR AUTOMATIC KNOWLEDGE
+
+
+    uint playerIndex = 0;
+    uint selfIndex = 0;
+
+    public void DecideFormations()
     {
+        selfFormation = possibleActions.GetAt(selfIndex);
+        GameController.Get().SetPlayerFormation(possibleActions.GetAt(playerIndex));
+
+        playerIndex++;
+        if(playerIndex == possibleActions.GetCount())
+        {
+            playerIndex = 0;
+            selfIndex++;
+            if(selfIndex == possibleActions.GetCount())
+            {
+                // GAME OVER
+                GameController.Get().OnGameEnds();
+            }
+        }
+
+    }
+
+    void InterpretatePlayerFormation()
+    {
+        ArmyAction formation  = GameController.Get().playerController.GetPlayerFormation();
+        foreach (Unit unit in formation.GetUnits())
+        {
+            int cellDataRelativeX = unit.GetPosition().GetX();
+            int cellDataRelativeY = unit.GetPosition().GetY();
+
+            CellData relativeCellData       = BoardData.Get().GetCellDataAt(cellDataRelativeX, cellDataRelativeY);
+            Vector3  cellDataWorldPosition  = boardBehaviour.GetWorldPositionOfCell(relativeCellData);
         
+            UnitType    AI_unitUnitType = unit.GetUnitData().GetType();
+            GameObject  AI_unit         = GameController.Get().unitsPool.GetUnitInstance(AI_unitUnitType);
+            
+            relativeCellData.SetEmpty(false);
+
+            AI_unit.SetActive(true);
+            
+            Soldier  AI_unitSoldier = AI_unit.GetComponent<Soldier>();
+            TeamData team           = GameController.Get().GetPlayerTeamData();
+
+            AI_unitSoldier.SetUnitType(AI_unitUnitType);
+            team.AddSoldier(AI_unitSoldier);
+            AI_unitSoldier.SetTeam(team);
+            AI_unitSoldier.SetUnit(unit);
+            AI_unitSoldier.Start();
+            AI_unit.GetComponent<DraggeableUnit>().enabled = false;
+            
+            AI_unit.transform.position = new Vector3 (cellDataWorldPosition.x, cellDataWorldPosition.y + 0.5f, cellDataWorldPosition.z);
+        }
     }
 
 }
