@@ -169,7 +169,7 @@ public class Node
 
         for (int iterator = 0; iterator < neighbours.Length; iterator++)
         {
-            if (neighbours[iterator] != null && neighbours[iterator].IsEmpty())
+            if (!(neighbours[iterator] is null) && neighbours[iterator].IsEmpty())
             {
                 switch (iterator)
                 {

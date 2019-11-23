@@ -33,21 +33,71 @@ using UnityEngine;
 
 public abstract class UnitBehaviour
 {
-    protected int health;
-    protected int totalHealth;
-    protected int damage;
-    protected int actionSpeed;
-    protected int damageDone;
-    protected int attackRange;
+    protected int   health;
+    protected int   totalHealth;
+    protected int   damage;
+    protected float actionSpeed;
+    protected int   damageDone;
+    protected int   attackRange;
 
 
-    public abstract void Attack();
-    public abstract void GetDamage();
+    public void Attack(Soldier target)
+    {
+        target.GetUnit().GetUnitData().GetBehaviour().ReceiveDamage(damage);
+        damageDone += damage;
+    }
 
-    public virtual int GetHealth()      => health;
-    public virtual int GetTotalHealth() => totalHealth;
-    public virtual int GetDamageDone()  => damageDone;
-    public virtual int GetAttackRange() => attackRange;
-    public virtual int GetActionSpeed() => actionSpeed;
+    public void ReceiveDamage(int damage) => health -= damage;
+
+    public int      GetHealth()      => health;
+    public int      GetTotalHealth() => totalHealth;
+    public int      GetDamageDone()  => damageDone;
+    public int      GetAttackRange() => attackRange;
+    public float    GetActionSpeed() => actionSpeed;
+
+}
+
+public class HealerSoldier : UnitBehaviour
+{
+    public HealerSoldier()
+    {
+      this.health = this.totalHealth = 400;
+      this.damage = -10;
+      this.actionSpeed = 0.3f;
+      this.attackRange = 3;
+    }
+}
+
+public class MeleeSoldier : UnitBehaviour
+{
+    public MeleeSoldier()
+    {
+        this.health = this.totalHealth = 500;
+        this.damage = 10;
+        this.actionSpeed = 0.45f;
+        this.attackRange = 1;
+    }
+}
+
+public class TankSoldier : UnitBehaviour
+{
+    public TankSoldier()
+    {
+        this.health = this.totalHealth = 1000;
+        this.damage = 3;
+        this.actionSpeed = 0.2f;
+        this.attackRange = 1;
+    }
+}
+
+public class RangedSoldier : UnitBehaviour
+{
+    public RangedSoldier()
+    {
+        this.health = this.totalHealth = 200;
+        this.damage = 15;
+        this.actionSpeed = 0.6f;
+        this.attackRange = 2;
+    }
 
 }

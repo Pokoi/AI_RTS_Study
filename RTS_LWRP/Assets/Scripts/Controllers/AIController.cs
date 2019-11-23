@@ -115,7 +115,8 @@ public class AIController : MonoBehaviour
             AI_unitSoldier.SetUnitType(AI_unitUnitType);
             team.AddSoldier(AI_unitSoldier);
             AI_unitSoldier.SetTeam(team);
-            
+            AI_unitSoldier.SetUnit(unit);
+            AI_unitSoldier.Start();
             AI_unit.GetComponent<DraggeableUnit>().enabled = false;
             
             AI_unit.transform.position = new Vector3 (cellDataWorldPosition.x, cellDataWorldPosition.y + 0.5f, cellDataWorldPosition.z);

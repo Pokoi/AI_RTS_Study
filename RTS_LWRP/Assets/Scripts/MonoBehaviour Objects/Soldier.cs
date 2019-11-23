@@ -27,8 +27,10 @@
  * SOFTWARE.
  */
 
-
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Soldier : MonoBehaviour
 {
@@ -37,10 +39,15 @@ public class Soldier : MonoBehaviour
     BattleDecisionMaker battleDecisionMaker;
     Locomotion          locomotion;
     TeamData            team;
+    List<Soldier>       targetSoldiers;
+    LineRenderer        line;
+    Slider              slider;
+    bool                readyToFight;
 
     public void     SetUnit(Unit unit)             => this.unit = unit;
     public void     SetUnitType(UnitType unitType) => this.unitType = unitType;
     public void     SetTeam(TeamData team)         => this.team = team;
+    public TeamData GetTeam()                      => this.team;
 
     public Unit     GetUnit()        => this.unit;
     public UnitType GetUnitType()    => this.unitType;
@@ -51,29 +58,102 @@ public class Soldier : MonoBehaviour
 
     public void SetReadyToFight(bool readyToFight)
     {
-        if(readyToFight)
+        this.readyToFight = readyToFight;
+        if(this.readyToFight)
         {
+            SetTargetSoldiers();
             Battle();
         }
     }
-    private void Start() 
+    public void Start() 
     {
         battleDecisionMaker = new BattleDecisionMaker(this);
         locomotion          = new Locomotion(transform);
+        line                = GetComponent<LineRenderer>();
+        line.enabled        = false;
+        slider              = GetComponentInChildren<Slider>();
+        slider.GetComponentInParent<Canvas>().worldCamera = Camera.main; 
     }
 
+    private void Update() 
+    {
+        if(this.readyToFight)
+        {
+            slider.value = (float) GetHealth() / (float) GetTotalHealth();
+        }
+    }
 
     void Battle()
     {
-        Soldier target = battleDecisionMaker.ChooseSoldierToAttack();
-        locomotion.Move(target, unit.GetUnitData().GetBehaviour().GetAttackRange());
+        Soldier target = battleDecisionMaker.ChooseSoldierToAttack(targetSoldiers);
+        //locomotion.Move(target, unit.GetUnitData().GetBehaviour().GetAttackRange());
+
+        StartCoroutine(Fight(target));
     }
+
+    void SetTargetSoldiers()
+    {
+        if(unitType == UnitType.healer)
+        {
+            targetSoldiers = team.GetSoldiers();
+        }
+        else
+        {
+            switch(team.GetOwner())
+            {
+                case TeamData.Owners.Player:
+                    targetSoldiers = GameController.Get().GetAITeamData().GetSoldiers();
+                break;
+
+                case TeamData.Owners.AI:
+                    targetSoldiers = GameController.Get().GetPlayerTeamData().GetSoldiers();
+                break;
+
+                case TeamData.Owners.AIDebug:
+                    targetSoldiers = GameController.Get().GetAITeamData().GetSoldiers();
+                break;
+            }
+        }
+    }
+
     IEnumerator Fight(Soldier target)
     {
+        UnitBehaviour   behaviour   = unit.GetUnitData().GetBehaviour();
+        int             range       = behaviour.GetAttackRange();
+
+        //while(locomotion.IsInRange(this.GetPosition(), target.GetPosition(), range))
         while(true)
         {
-            yield
+            line.enabled = true;
+            line.SetColors(team.GetDebugColor(), team.GetDebugColor());
+            line.SetPosition(0, transform.position);
+            line.SetPosition(1, target.transform.position);
+            
+            behaviour.Attack(target);
+            yield return new WaitForSeconds(1 - behaviour.GetActionSpeed());
+            
+            if(unitType == UnitType.healer)
+            {
+                if(target.GetHealth() == target.GetTotalHealth() || target.GetHealth() == 0)
+                {
+                    break;
+                }
+            }
+            else
+            {
+                if(target.GetHealth() <= 0)
+                {
+                    target.gameObject.SetActive(false);
+                    target.GetPosition().SetEmpty(true);
+                    targetSoldiers.Remove(target);
+                    target.GetTeam().OnUnitKilled();
+                    break;
+                }
+            }
         }
+
+        line.enabled = false;
+        Battle();
     }
 
 }

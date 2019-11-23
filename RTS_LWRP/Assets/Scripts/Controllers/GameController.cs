@@ -53,67 +53,8 @@ public class GameController : MonoBehaviour
     public TeamData GetPlayerTeamData()  => playerTeamData;
     public TeamData GetAITeamData()      => AITeamData;
     public TeamData GetAIDebugTeamData() => AIDebugTeamData;
-    
-    public void UpdateXmL()
-    {
-        AIController.FormationAlgorithims usedAlgorithim = aiController.GetFormationAlgorithim();
-        
-        switch (usedAlgorithim)
-        {
-            case AIController.FormationAlgorithims.UCB1:
-            XmlManaging.CreateFile<XmlUCB1ObjectData>(UCB1ObjectData, formationVariablesXMLData.UCB1ObjectDataPath);
-            break;
 
-            case AIController.FormationAlgorithims.RegretMatching:
-            break;
-
-        }
-    }
-
-    private void Awake() 
-    {
-        instance = this;
-        unitsPool.SetMaxUnitsCount(aiController.GetMaxUnitsInTeam() << 1);
-        playerTeamData  = new PlayerTeam();
-        AITeamData      = new AITeam();
-        AIDebugTeamData = new AIDebugTeam();
-    }
-
-    private void Start() 
-    {
-        CreateFormationVariablesXml();
-       // ReadAlgorithimXml();
-
-        Invoke("OnPlayerDecideFormation", 3);
-        Invoke("OnStartBattle", 6);
-        Invoke("OnGameEnds", 7);
-    }
-    private void OnPlayerDecideFormation()
-    {
-        // Center the camera in the player board
-        BoardData   boardData                   = BoardData.Get();
-        Vector3     playerCenterCellPosition    = boardBehaviour.GetWorldPositionOfCell(boardData.GetPlayerCellsCenterCell());
-        cameraBehaviour.CenterToPosition(playerCenterCellPosition); 
-
-        // Hide all cells but player's
-        HideCells();
- 
-    }
-
-    private void OnStartBattle()
-    {
-        // Center the camera in the board
-        BoardData   boardData               = BoardData.Get();
-        Vector3     boardCenterCellPosition = boardBehaviour.GetWorldPositionOfCell(boardData.GetBoardCenterCell());
-        cameraBehaviour.CenterToPosition(boardCenterCellPosition); 
-
-        // Show the hiden cells
-        ShowCells();
-
-        AIController.Get().OnBattleStart();
-    }
-
-    private void OnBattleEnds()
+    public void OnBattleEnds()
     {
         // Calculate score
         int score = 0;
@@ -139,21 +80,77 @@ public class GameController : MonoBehaviour
         }
     }
 
+    private void Awake() 
+    {
+        instance = this;
+        unitsPool.SetMaxUnitsCount(aiController.GetMaxUnitsInTeam() << 1);
+        playerTeamData  = new PlayerTeam();
+        AITeamData      = new AITeam();
+        AIDebugTeamData = new AIDebugTeam();
+    }
+
+    private void Start() 
+    {
+        CreateFormationVariablesXml();
+       // ReadAlgorithimXml();
+        Invoke("OnPlayerDecideFormation", 3);
+    }
+    private void OnPlayerDecideFormation()
+    {
+        // Center the camera in the player board
+        BoardData   boardData                   = BoardData.Get();
+        Vector3     playerCenterCellPosition    = boardBehaviour.GetWorldPositionOfCell(boardData.GetPlayerCellsCenterCell());
+        cameraBehaviour.CenterToPosition(playerCenterCellPosition); 
+
+        // Hide all cells but player's
+        HideCells();
+    }
+
+    public void OnStartBattle()
+    {
+        // Center the camera in the board
+        BoardData   boardData               = BoardData.Get();
+        Vector3     boardCenterCellPosition = boardBehaviour.GetWorldPositionOfCell(boardData.GetBoardCenterCell());
+        cameraBehaviour.CenterToPosition(boardCenterCellPosition); 
+
+        // Show the hiden cells
+        ShowCells();
+
+        AIController.Get().OnBattleStart();
+
+        //Activate player battle ai 
+        foreach (Soldier soldier in playerTeamData.GetSoldiers())
+        {
+            soldier.SetReadyToFight(true);
+        }
+        foreach (Soldier soldier in AITeamData.GetSoldiers())
+        {
+            soldier.SetReadyToFight(true);
+        }
+    }
+
     private void OnGameEnds()
     {
        //Write the xml file
-       AIController.FormationAlgorithims usedAlgorithim = aiController.GetFormationAlgorithim();
+       UpdateXmL();
+      
+    }
+
+    void UpdateXmL()
+    {
+        AIController.FormationAlgorithims usedAlgorithim = aiController.GetFormationAlgorithim();
+        
         switch (usedAlgorithim)
         {
             case AIController.FormationAlgorithims.UCB1:
-            XmlManaging.CreateFile(UCB1ObjectData, formationVariablesXMLData.UCB1ObjectDataPath);
+            XmlManaging.CreateFile<XmlUCB1ObjectData>(UCB1ObjectData, formationVariablesXMLData.UCB1ObjectDataPath);
             break;
 
             case AIController.FormationAlgorithims.RegretMatching:
-            XmlManaging.CreateFile(RegretMatchingObjectData, formationVariablesXMLData.RegretMatchingObjectDataPath);
+            XmlManaging.CreateFile<XmlRegretMatchingObjectData>(RegretMatchingObjectData, formationVariablesXMLData.RegretMatchingObjectDataPath);
             break;
+
         }
-      
     }
 
     private void ShowCells()

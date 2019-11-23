@@ -42,13 +42,26 @@ public class TeamData
     
     protected int teamScore;
     protected List<Soldier> teamSoldiers;
+    protected int soldiersAliveInTeam = 0;
 
     public Color    GetDebugColor()     => this.debugLineColor;
     public int      GetScore()          => this.teamScore;
     public void     SetScore(int score) => this.teamScore += score;
     public Owners   GetOwner()          => this.owner;
     public List<Soldier> GetSoldiers()  => this.teamSoldiers;
-    public void AddSoldier(Soldier soldier) => this.teamSoldiers.Add(soldier);
+    public void AddSoldier(Soldier soldier) 
+    {
+        this.teamSoldiers.Add(soldier);
+        ++soldiersAliveInTeam;
+    }
+    public void OnUnitKilled()
+    {
+        --soldiersAliveInTeam;
+        if(teamSoldiers.Count == 0)
+        {
+            GameController.Get().OnBattleEnds();
+        }
+    }
 
 }
 
