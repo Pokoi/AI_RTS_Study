@@ -1,6 +1,6 @@
-/*
- * File: AIAlgorithim.cs
- * File Created: Tuesday, 29th October 2019 5:27:09 pm
+﻿/*
+ * File: ScoreController.cs
+ * File Created: Saturday, 23rd November 2019 4:00:24 pm
  * ––––––––––––––––––––––––
  * Author: Jesus Fermin, 'Pokoi', Villar  (hello@pokoidev.com)
  * ––––––––––––––––––––––––
@@ -27,41 +27,51 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
-public class AIAlgorithim <T> where T : Action
+public class ScoreController : MonoBehaviour
 {
-   
-    public Actions<T>    possibleActions;
-    private int [][]    utility;
-    
-    public AIAlgorithim(Actions<T> _possibleActions)
+    public TextMeshProUGUI playerTeamScoreText;
+    public TextMeshProUGUI AITeamScoreText;
+
+    // Start is called before the first frame update
+    void Start()
     {
-        this.possibleActions    = _possibleActions;
-        this.utility            = new int[this.possibleActions.GetCount()][];
-        for (int index = 0; index < this.utility.Length; ++index)
+        
+    }
+
+    public int CalculateScoreRelativeToAI(TeamData playerTeam, TeamData AITeam)
+    {
+        int playerScore = 0;
+        int AIScore     = 0;
+
+        foreach (Soldier soldier in playerTeam.GetSoldiers())
         {
-            utility[index] = new int[this.possibleActions.GetCount()];
+            playerScore -= soldier.GetHealth();
         }
 
-    }
-    public virtual T Play() => null;
-    public virtual void UpdateValues (T oponentAction) {}
-    public virtual T GetNextAction () => default(T);
+        foreach (Soldier soldier in AITeam.GetSoldiers())
+        {
+            AIScore += soldier.GetHealth();
+        }
 
-    public void UpdateUtility(T selfAction, T oponentAction, int score)
+        playerTeam.SetScore(-playerScore);
+        AITeam.SetScore(AIScore);
+
+        ShowScores(playerTeam, AITeam);
+
+        if(playerScore == 0 && AIScore != 0) return AIScore;
+        if(playerScore != 0 && AIScore == 0) return playerScore;
+
+        return AIScore + playerScore;
+    }
+
+    void ShowScores(TeamData playerTeam, TeamData AITeam)
     {
-        utility[oponentAction.Index][selfAction.Index] = (byte)score;
+        playerTeamScoreText.text = $"Player score: {playerTeam.GetScore()}";
+        AITeamScoreText.text     = $"AI score: {AITeam.GetScore()}";
     }
-
-    public virtual int GetUtilityOf(T selfAction, T oponentAction)
-    {
-        return utility[oponentAction.Index][selfAction.Index];
-    }
-    public virtual int [][] GetUtility() => this.utility; 
-
-    public virtual void SetUtility(int [][] utility) => this.utility = utility;
 }

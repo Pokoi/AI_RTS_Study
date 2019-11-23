@@ -48,6 +48,7 @@ public class AIController : MonoBehaviour
     public int                      GetMaxUnitsInTeam()         => maxUnitsInTeam;
     public AIAlgorithim<ArmyAction> GetTeamFormer()             => teamFormer;
     public uint                     GetPossibleActionsCount()   => possibleActions.GetCount();
+    public Actions<ArmyAction>      GetPossibleActions()        => possibleActions;
     public FormationAlgorithims     GetFormationAlgorithim()    => formationAlgorithim;
     
     public AIController Create()

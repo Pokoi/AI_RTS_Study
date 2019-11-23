@@ -34,14 +34,44 @@ using System.Xml.Serialization;
 
 public class XmlRegretMatchingObjectData : XmlObjectData
 {
-    [XmlArray ("utility")] [XmlArrayItem ("ArmyAction")]
-    public byte [][] utility;
+     [XmlArray ("utility")] [XmlArrayItem ("ArmyAction")]
+    public int [] utility;
     
     [XmlArray ("regret")] [XmlArrayItem ("percentage")]
     public float [] regret;
 
     [XmlArray ("chance")] [XmlArrayItem ("percentage")]
     public float [] chance;
+
+    public void ConvertArray(int [][] utility)
+    {
+        this.utility = new int [utility.Length * utility.Length];
+        int iterator = 0;
+        for(int i = 0; i < utility.Length; ++i)
+        {
+            for (int j = 0; j < utility.Length; ++j)
+            {
+                this.utility[iterator] = utility[i][j];
+                ++iterator;
+            }
+        }
+    }
+
+    public int[][] CastToArrayOfArray()
+    {
+        int[][] toReturn = new int[utility.Length][];
+        int iterator = 0;
+        for(int i = 0; i < utility.Length; ++i)
+        {
+            for (int j = 0; j < utility.Length; ++j)
+            {
+                toReturn[i][j] = this.utility[iterator];
+                ++iterator;
+            }
+        }
+
+        return toReturn;
+    }
 
     public XmlRegretMatchingObjectData() {}
 }

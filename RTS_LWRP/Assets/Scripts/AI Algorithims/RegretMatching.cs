@@ -64,7 +64,7 @@ public class RegretMatching <T> : AIAlgorithim <T> where T : Action
 
         if (sum <= 0)
         {
-            last_action = possibleActions.GetAt((int)UnityEngine.Random.Range(0, num_actions));
+            last_action = possibleActions.GetAt((uint)UnityEngine.Random.Range(0, num_actions));
         }
         else
         {
@@ -81,7 +81,7 @@ public class RegretMatching <T> : AIAlgorithim <T> where T : Action
                 {
                     if (prob < chance[i])
                     {
-                        last_action = possibleActions.GetAt(i);
+                        last_action = possibleActions.GetAt((uint)i);
                     }
                 }
             }
@@ -93,7 +93,7 @@ public class RegretMatching <T> : AIAlgorithim <T> where T : Action
     {
         for (int i = 0; i < num_actions; ++i)
         {
-            regret[i] += GetUtilityOf(possibleActions.GetAt(i), oponentAction);
+            regret[i] += GetUtilityOf(possibleActions.GetAt((uint)i), oponentAction);
             regret[i] -= GetUtilityOf(last_action, oponentAction);
         }
     }

@@ -49,11 +49,20 @@ public abstract class UnitBehaviour
 
     public void ReceiveDamage(int damage) => health -= damage;
 
+    public abstract void ApplyBuffEfect(Soldier target);
+
+    public void     SetHealth(int value)            => this.health = value;
+    public void     SetTotalHealth (int value)      => this.totalHealth = value;
+    public void     SetActionSpeed (float value)    => this.actionSpeed = value;
+    public void     SetDamage (int value)           => this.damage = value;
+
     public int      GetHealth()      => health;
     public int      GetTotalHealth() => totalHealth;
     public int      GetDamageDone()  => damageDone;
+    public int      GetDamage()      => damage;
     public int      GetAttackRange() => attackRange;
     public float    GetActionSpeed() => actionSpeed;
+
 
 }
 
@@ -66,6 +75,13 @@ public class HealerSoldier : UnitBehaviour
       this.actionSpeed = 0.3f;
       this.attackRange = 3;
     }
+
+    public override void ApplyBuffEfect(Soldier target)
+    {
+        UnitBehaviour targetBehaviour = target.GetUnit().GetUnitData().GetBehaviour();
+        targetBehaviour.SetTotalHealth(targetBehaviour.GetTotalHealth() + 20);
+        targetBehaviour.SetHealth(targetBehaviour.GetTotalHealth() + 20);
+    }
 }
 
 public class MeleeSoldier : UnitBehaviour
@@ -77,6 +93,12 @@ public class MeleeSoldier : UnitBehaviour
         this.actionSpeed = 0.45f;
         this.attackRange = 1;
     }
+
+    public override void ApplyBuffEfect(Soldier target)
+    {
+        UnitBehaviour targetBehaviour = target.GetUnit().GetUnitData().GetBehaviour();
+        targetBehaviour.SetDamage(targetBehaviour.GetDamage() + 5);
+    }
 }
 
 public class TankSoldier : UnitBehaviour
@@ -87,6 +109,13 @@ public class TankSoldier : UnitBehaviour
         this.damage = 3;
         this.actionSpeed = 0.2f;
         this.attackRange = 1;
+    }
+
+    public override void ApplyBuffEfect(Soldier target)
+    {
+        UnitBehaviour targetBehaviour = target.GetUnit().GetUnitData().GetBehaviour();
+        targetBehaviour.SetTotalHealth(targetBehaviour.GetTotalHealth() + 50);
+        targetBehaviour.SetHealth(targetBehaviour.GetTotalHealth() + 50);
     }
 }
 
@@ -100,4 +129,9 @@ public class RangedSoldier : UnitBehaviour
         this.attackRange = 2;
     }
 
+    public override void ApplyBuffEfect(Soldier target)
+    {
+        UnitBehaviour targetBehaviour = target.GetUnit().GetUnitData().GetBehaviour();
+        targetBehaviour.SetActionSpeed(targetBehaviour.GetActionSpeed() + 0.2f);
+    }
 }

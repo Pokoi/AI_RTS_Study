@@ -32,7 +32,37 @@ using System.Xml.Serialization;
 public class XmlUCB1ObjectData : XmlObjectData
 {
     [XmlArray ("utility")] [XmlArrayItem ("ArmyAction")]
-    public byte [][] utility;
+    public int [] utility;
 
     public XmlUCB1ObjectData() {}
+
+    public void ConvertArray(int [][] utility)
+    {
+        this.utility = new int [utility.Length * utility.Length];
+        int iterator = 0;
+        for(int i = 0; i < utility.Length; ++i)
+        {
+            for (int j = 0; j < utility.Length; ++j)
+            {
+                this.utility[iterator] = utility[i][j];
+                 ++iterator;
+            }
+        }
+    }
+
+    public int[][] CastToArrayOfArray()
+    {
+        int[][] toReturn = new int[utility.Length][];
+        int iterator = 0;
+        for(int i = 0; i < utility.Length; ++i)
+        {
+            for (int j = 0; j < utility.Length; ++j)
+            {
+                toReturn[i][j] = this.utility[iterator];
+                ++iterator;
+            }
+        }
+
+        return toReturn;
+    }
 }

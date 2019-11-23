@@ -43,7 +43,7 @@ public class BattleDecisionMaker
 
     public Soldier ChooseSoldierToAttack(List<Soldier> soldiers)
     {
-        int bestHeuristic   = 0;
+        int bestHeuristic   = int.MinValue;
         Soldier bestSoldier = null;
 
         foreach(Soldier soldier in soldiers)

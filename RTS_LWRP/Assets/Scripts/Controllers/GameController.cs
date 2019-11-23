@@ -38,12 +38,14 @@ public class GameController : MonoBehaviour
     public UnitsPool        unitsPool;
     public AIController     aiController;
     public PlayerController playerController;
+    public ScoreController  scoreController;
     
     static GameController   instance;
 
     TeamData playerTeamData;
     TeamData AITeamData;
     TeamData AIDebugTeamData;
+    bool callToEnd;
 
     XmlFormationVariables formationVariablesXMLData;
     XmlUCB1ObjectData UCB1ObjectData;
@@ -56,27 +58,46 @@ public class GameController : MonoBehaviour
 
     public void OnBattleEnds()
     {
-        // Calculate score
-        int score = 0;
-
-        // Comunicate score to IA
-        aiController.OnBattleEnd(playerController.GetPlayerFormation(), score); 
-
-        
-        AIController.FormationAlgorithims usedAlgorithim = aiController.GetFormationAlgorithim();
-        switch (usedAlgorithim)
+        if(!callToEnd)
         {
-            case AIController.FormationAlgorithims.UCB1:
-            UCB1ObjectData.utility = aiController.GetTeamFormer().GetUtility();
-            break;
+            callToEnd = true;
 
-            case AIController.FormationAlgorithims.RegretMatching:
-            RegretMatching<ArmyAction> regretMatchingFormer = (RegretMatching<ArmyAction>) aiController.GetTeamFormer();
-            RegretMatchingObjectData.utility    = regretMatchingFormer.GetUtility();
-            RegretMatchingObjectData.regret     = regretMatchingFormer.GetRegret();
-            RegretMatchingObjectData.chance     = regretMatchingFormer.GetChance();
-            break;
+            foreach (Soldier soldier in playerTeamData.GetSoldiers())
+            {
+                soldier.SetReadyToFight(false);
+            }
+            foreach (Soldier soldier in AITeamData.GetSoldiers())
+            {
+                soldier.SetReadyToFight(false);
+            }
 
+            // Calculate score
+            int score = scoreController.CalculateScoreRelativeToAI(playerTeamData, AITeamData);
+
+            Debug.Log(score);
+            Debug.Log($"At {playerController.GetPlayerFormation().Index}");
+
+            // Comunicate score to IA
+            aiController.OnBattleEnd(playerController.GetPlayerFormation(), score); 
+
+            
+            AIController.FormationAlgorithims usedAlgorithim = aiController.GetFormationAlgorithim();
+            switch (usedAlgorithim)
+            {
+                case AIController.FormationAlgorithims.UCB1:
+                UCB1ObjectData.ConvertArray(aiController.GetTeamFormer().GetUtility());
+                break;
+
+                case AIController.FormationAlgorithims.RegretMatching:
+                RegretMatching<ArmyAction> regretMatchingFormer = (RegretMatching<ArmyAction>) aiController.GetTeamFormer();
+                RegretMatchingObjectData.ConvertArray(regretMatchingFormer.GetUtility());
+                RegretMatchingObjectData.regret     = regretMatchingFormer.GetRegret();
+                RegretMatchingObjectData.chance     = regretMatchingFormer.GetChance();
+                break;
+
+            }
+
+            OnGameEnds();
         }
     }
 
@@ -87,6 +108,8 @@ public class GameController : MonoBehaviour
         playerTeamData  = new PlayerTeam();
         AITeamData      = new AITeam();
         AIDebugTeamData = new AIDebugTeam();
+        UCB1ObjectData  = new XmlUCB1ObjectData();
+        RegretMatchingObjectData = new XmlRegretMatchingObjectData();
     }
 
     private void Start() 
@@ -116,7 +139,25 @@ public class GameController : MonoBehaviour
         // Show the hiden cells
         ShowCells();
 
+        uint j = 0;
+        for(
+            j = 0; 
+            j < AIController.Get().GetPossibleActions().GetCount() && 
+            AIController.Get().GetPossibleActions().GetAt((uint)j) != playerController.GetPlayerFormation(); 
+            ++j
+            );
+
+        playerController.GetPlayerFormation().Index = j;
+
         AIController.Get().OnBattleStart();
+
+        
+        for(int i = 0; i < playerTeamData.GetSoldiers().Count; ++i)
+        {
+            playerTeamData.GetSoldiers()[i].ApplyBuff();
+            AITeamData.GetSoldiers()[i].ApplyBuff();
+        }
+        
 
         //Activate player battle ai 
         foreach (Soldier soldier in playerTeamData.GetSoldiers())
@@ -226,13 +267,13 @@ public class GameController : MonoBehaviour
         {
             case AIController.FormationAlgorithims.UCB1:
             UCB1ObjectData = XmlManaging.ReadFile<XmlUCB1ObjectData>(formationVariablesXMLData.UCB1ObjectDataPath);
-            aiController.GetTeamFormer().SetUtility(UCB1ObjectData.utility);
+            aiController.GetTeamFormer().SetUtility(UCB1ObjectData.CastToArrayOfArray());
             break;
 
             case AIController.FormationAlgorithims.RegretMatching:
             RegretMatchingObjectData = XmlManaging.ReadFile<XmlRegretMatchingObjectData>(formationVariablesXMLData.RegretMatchingObjectDataPath);
             RegretMatching<ArmyAction> regretMatchingFormer = (RegretMatching<ArmyAction>) aiController.GetTeamFormer();
-            regretMatchingFormer.SetUtility(RegretMatchingObjectData.utility);
+            regretMatchingFormer.SetUtility(RegretMatchingObjectData.CastToArrayOfArray());
             regretMatchingFormer.SetRegret(RegretMatchingObjectData.regret);
             regretMatchingFormer.SetChance(RegretMatchingObjectData.chance);
             break;

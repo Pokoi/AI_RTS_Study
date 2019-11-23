@@ -64,6 +64,24 @@ public class Soldier : MonoBehaviour
             SetTargetSoldiers();
             Battle();
         }
+        else
+        {
+            line.enabled = false;
+        }
+    }
+
+    public void ApplyBuff()
+    {
+        List<Soldier> buffableSoldiers = team.GetSoldiers();
+
+        foreach(Soldier soldier in buffableSoldiers)
+        {
+            if (IsInBuffRange(this.GetPosition(), soldier.GetPosition()))
+            {
+                this.GetUnit().GetUnitData().GetBehaviour().ApplyBuffEfect(soldier);
+            }
+        }
+
     }
     public void Start() 
     {
@@ -85,10 +103,13 @@ public class Soldier : MonoBehaviour
 
     void Battle()
     {
-        Soldier target = battleDecisionMaker.ChooseSoldierToAttack(targetSoldiers);
-        //locomotion.Move(target, unit.GetUnitData().GetBehaviour().GetAttackRange());
+        if(this.readyToFight)
+        {
+            Soldier target = battleDecisionMaker.ChooseSoldierToAttack(targetSoldiers);
+            //locomotion.Move(target, unit.GetUnitData().GetBehaviour().GetAttackRange());
 
-        StartCoroutine(Fight(target));
+            StartCoroutine(Fight(target));
+        }
     }
 
     void SetTargetSoldiers()
@@ -115,6 +136,18 @@ public class Soldier : MonoBehaviour
             }
         }
     }
+    bool IsInBuffRange(CellData soldier, CellData otherSoldier)
+    {
+        int soldierX        = soldier.GetX();
+        int soldierY        = soldier.GetY();
+        int otherSoldierX   = otherSoldier.GetX();
+        int otherSoldierY   = otherSoldier.GetY();
+
+        int deltaX = Mathf.Abs(soldierX - otherSoldierX);
+        int deltaY = Mathf.Abs(soldierY - otherSoldierY);
+
+        return ((deltaX == 1 && deltaY == 0) || (deltaX == 0 && deltaY == 1));
+    }
 
     IEnumerator Fight(Soldier target)
     {
@@ -122,7 +155,7 @@ public class Soldier : MonoBehaviour
         int             range       = behaviour.GetAttackRange();
 
         //while(locomotion.IsInRange(this.GetPosition(), target.GetPosition(), range))
-        while(true)
+        while(true && target != null)
         {
             line.enabled = true;
             line.SetColors(team.GetDebugColor(), team.GetDebugColor());
@@ -130,7 +163,7 @@ public class Soldier : MonoBehaviour
             line.SetPosition(1, target.transform.position);
             
             behaviour.Attack(target);
-            yield return new WaitForSeconds(1 - behaviour.GetActionSpeed());
+            yield return new WaitForSeconds(2 -  behaviour.GetActionSpeed());
             
             if(unitType == UnitType.healer)
             {

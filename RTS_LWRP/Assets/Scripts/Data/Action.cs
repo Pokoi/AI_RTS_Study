@@ -47,7 +47,7 @@ public class Actions <T> where T : Action
         CreateActions();
     }
 
-    public T GetAt(int index) =>  index < count ? actions [index] : null; 
+    public T GetAt(uint index) =>  index < count ? actions [index] : null; 
 
     public int GetIndex(T aA)
     {
@@ -116,6 +116,7 @@ public class Actions <T> where T : Action
             if(HaveDifferentPossitions(result))
             {
                 this.actions [index] = new ArmyAction(result) as T;
+                this.actions [index].Index = (uint)index;
                 ++index;
             }
         }
@@ -172,8 +173,8 @@ public class Actions <T> where T : Action
 
 public class Action
 {
-    protected int index;
-    public int Index 
+    protected uint index;
+    public uint Index 
     {
         get { return index; }
         set { index = value;}

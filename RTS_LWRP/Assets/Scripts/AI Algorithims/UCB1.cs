@@ -64,7 +64,7 @@ public class UCB1 <T> : AIAlgorithim <T> where T : Action
         {
             if (timesPlayedByAction[i] == 0)
             {
-                selfLastAction = possibleActions.GetAt(i);
+                selfLastAction = possibleActions.GetAt((uint)i);
                 return selfLastAction;
             }
         }
@@ -81,7 +81,7 @@ public class UCB1 <T> : AIAlgorithim <T> where T : Action
                 bestScore = tempScore;
             }
         }
-        selfLastAction = possibleActions.GetAt(best);
+        selfLastAction = possibleActions.GetAt((uint)best);
         return selfLastAction;    
     }
     private float GetUCB1(float averageUtility, float count, float totalActions)
