@@ -119,6 +119,7 @@ public class GameController : MonoBehaviour
         AIDebugTeamData = new AIDebugTeam();
         UCB1ObjectData  = new XmlUCB1ObjectData();
         RegretMatchingObjectData = new XmlRegretMatchingObjectData();
+        Time.timeScale *= 2;
     }
 
     private void Start() 
