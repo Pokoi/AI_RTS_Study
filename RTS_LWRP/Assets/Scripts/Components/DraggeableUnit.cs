@@ -91,12 +91,16 @@ public class DraggeableUnit : MonoBehaviour
 
                 this.followCursorComponent.StopMoving();
                 
+                TeamData team = GameController.Get().GetPlayerTeamData();
                 thisSoldier.SetUnit(placedUnit);
+                team.AddSoldier(thisSoldier);
+                thisSoldier.SetTeam(team);
                 PlayerController.Get().AddUnitToFormation(placedUnit);
                 targetCellData.SetEmpty(false);
                 draggingUnit = false;
             }
         }
+
     }
 
     private void DragPlaceable()

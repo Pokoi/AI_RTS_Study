@@ -1,6 +1,6 @@
 ﻿/*
- * File: UnitBehaviour.cs
- * File Created: Friday, 8th November 2019 8:52:04 pm
+ * File: TeamData.cs
+ * File Created: Saturday, 23rd November 2019 12:58:27 am
  * ––––––––––––––––––––––––
  * Author: Jesus Fermin, 'Pokoi', Villar  (hello@pokoidev.com)
  * ––––––––––––––––––––––––
@@ -31,23 +31,56 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class UnitBehaviour
+public class TeamData 
 {
-    protected int health;
-    protected int totalHealth;
-    protected int damage;
-    protected int actionSpeed;
-    protected int damageDone;
-    protected int attackRange;
+    public enum Owners 
+    {
+        Player, AI, AIDebug
+    }
+    protected Owners owner;
+    protected Color  debugLineColor;
+    
+    protected int teamScore;
+    protected List<Soldier> teamSoldiers;
 
+    public Color    GetDebugColor()     => this.debugLineColor;
+    public int      GetScore()          => this.teamScore;
+    public void     SetScore(int score) => this.teamScore += score;
+    public Owners   GetOwner()          => this.owner;
+    public List<Soldier> GetSoldiers()  => this.teamSoldiers;
+    public void AddSoldier(Soldier soldier) => this.teamSoldiers.Add(soldier);
 
-    public abstract void Attack();
-    public abstract void GetDamage();
+}
 
-    public virtual int GetHealth()      => health;
-    public virtual int GetTotalHealth() => totalHealth;
-    public virtual int GetDamageDone()  => damageDone;
-    public virtual int GetAttackRange() => attackRange;
-    public virtual int GetActionSpeed() => actionSpeed;
+public class PlayerTeam : TeamData
+{
+    public PlayerTeam()
+    {
+        owner           = Owners.Player;
+        debugLineColor  = Color.blue;
+        teamScore       = 0;
+        teamSoldiers    = new List<Soldier>();
+    }
+}
 
+public class AITeam: TeamData
+{
+    public AITeam()
+    {
+        owner           = Owners.AI;
+        debugLineColor  = Color.red;
+        teamScore       = 0;
+        teamSoldiers    = new List<Soldier>();
+    }
+}
+
+public class AIDebugTeam: TeamData
+{
+    public AIDebugTeam()
+    {
+        owner           = Owners.AIDebug;
+        debugLineColor  = Color.yellow;
+        teamScore       = 0;
+        teamSoldiers    = new List<Soldier>();
+    }
 }

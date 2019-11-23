@@ -27,32 +27,53 @@
  * SOFTWARE.
  */
 
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 public class Soldier : MonoBehaviour
 {
-    Unit unit;
-    UnitType unitType;
+    Unit                unit;
+    UnitType            unitType;
     BattleDecisionMaker battleDecisionMaker;
-    Locomotion locomotion;
+    Locomotion          locomotion;
+    TeamData            team;
 
-    public void SetUnit(Unit unit) => this.unit = unit;
-    public Unit GetUnit() => this.unit;
+    public void     SetUnit(Unit unit)             => this.unit = unit;
+    public void     SetUnitType(UnitType unitType) => this.unitType = unitType;
+    public void     SetTeam(TeamData team)         => this.team = team;
 
-    public void SetUnitType(UnitType unitType) => this.unitType = unitType;
-    public UnitType GetUnitType() => this.unitType;
+    public Unit     GetUnit()        => this.unit;
+    public UnitType GetUnitType()    => this.unitType;
+    public CellData GetPosition()    => unit.GetPosition();
+    public int      GetHealth()      => unit.GetUnitData().GetBehaviour().GetHealth();
+    public int      GetTotalHealth() => unit.GetUnitData().GetBehaviour().GetTotalHealth();
+    public int      GetDamageDone()  => unit.GetUnitData().GetBehaviour().GetDamageDone();
 
-    public CellData GetPosition() => unit.GetPosition();
-    public int GetHealth()      => unit.GetUnitData().GetBehaviour().GetHealth();
-    public int GetTotalHealth() => unit.GetUnitData().GetBehaviour().GetTotalHealth();
-    public int GetDamageDone()  => unit.GetUnitData().GetBehaviour().GetDamageDone();
-
+    public void SetReadyToFight(bool readyToFight)
+    {
+        if(readyToFight)
+        {
+            Battle();
+        }
+    }
     private void Start() 
     {
         battleDecisionMaker = new BattleDecisionMaker(this);
         locomotion          = new Locomotion(transform);
+    }
+
+
+    void Battle()
+    {
+        Soldier target = battleDecisionMaker.ChooseSoldierToAttack();
+        locomotion.Move(target, unit.GetUnitData().GetBehaviour().GetAttackRange());
+    }
+    IEnumerator Fight(Soldier target)
+    {
+        while(true)
+        {
+            yield
+        }
     }
 
 }

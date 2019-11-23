@@ -41,12 +41,19 @@ public class GameController : MonoBehaviour
     
     static GameController   instance;
 
+    TeamData playerTeamData;
+    TeamData AITeamData;
+    TeamData AIDebugTeamData;
+
     XmlFormationVariables formationVariablesXMLData;
     XmlUCB1ObjectData UCB1ObjectData;
     XmlRegretMatchingObjectData RegretMatchingObjectData;
 
-    public static GameController Get()  => instance;
-
+    public static GameController Get()   => instance;
+    public TeamData GetPlayerTeamData()  => playerTeamData;
+    public TeamData GetAITeamData()      => AITeamData;
+    public TeamData GetAIDebugTeamData() => AIDebugTeamData;
+    
     public void UpdateXmL()
     {
         AIController.FormationAlgorithims usedAlgorithim = aiController.GetFormationAlgorithim();
@@ -67,12 +74,16 @@ public class GameController : MonoBehaviour
     {
         instance = this;
         unitsPool.SetMaxUnitsCount(aiController.GetMaxUnitsInTeam() << 1);
+        playerTeamData  = new PlayerTeam();
+        AITeamData      = new AITeam();
+        AIDebugTeamData = new AIDebugTeam();
     }
 
     private void Start() 
     {
         CreateFormationVariablesXml();
        // ReadAlgorithimXml();
+
         Invoke("OnPlayerDecideFormation", 3);
         Invoke("OnStartBattle", 6);
         Invoke("OnGameEnds", 7);
@@ -99,8 +110,7 @@ public class GameController : MonoBehaviour
         // Show the hiden cells
         ShowCells();
 
-        AIController.Get().InterpreateFormation();
-        
+        AIController.Get().OnBattleStart();
     }
 
     private void OnBattleEnds()
@@ -120,7 +130,6 @@ public class GameController : MonoBehaviour
             break;
 
             case AIController.FormationAlgorithims.RegretMatching:
-            
             RegretMatching<ArmyAction> regretMatchingFormer = (RegretMatching<ArmyAction>) aiController.GetTeamFormer();
             RegretMatchingObjectData.utility    = regretMatchingFormer.GetUtility();
             RegretMatchingObjectData.regret     = regretMatchingFormer.GetRegret();
@@ -132,7 +141,19 @@ public class GameController : MonoBehaviour
 
     private void OnGameEnds()
     {
-       
+       //Write the xml file
+       AIController.FormationAlgorithims usedAlgorithim = aiController.GetFormationAlgorithim();
+        switch (usedAlgorithim)
+        {
+            case AIController.FormationAlgorithims.UCB1:
+            XmlManaging.CreateFile(UCB1ObjectData, formationVariablesXMLData.UCB1ObjectDataPath);
+            break;
+
+            case AIController.FormationAlgorithims.RegretMatching:
+            XmlManaging.CreateFile(RegretMatchingObjectData, formationVariablesXMLData.RegretMatchingObjectDataPath);
+            break;
+        }
+      
     }
 
     private void ShowCells()

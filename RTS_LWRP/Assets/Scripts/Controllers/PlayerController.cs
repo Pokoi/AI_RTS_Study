@@ -33,16 +33,12 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    int score;
     int choosenUnitsCount;
     static PlayerController instance;
 
     ArmyAction playerFormation;
     
     public static PlayerController Get()    => instance;
-    public void UpdateScore(int score)      => this.score += score;
-    private PlayerController()              => this.score = 0;
-
     public PlayerController Create()
     {
         if(instance == null)
@@ -53,8 +49,8 @@ public class PlayerController : MonoBehaviour
         return instance;
     }
 
-    public void UpdateChoosenUnits(int value) => choosenUnitsCount += value;
-    public int GetChoosenUnitsCount() => choosenUnitsCount;
+    public void UpdateChoosenUnits(int value)   => choosenUnitsCount += value;
+    public int  GetChoosenUnitsCount()          => choosenUnitsCount;
 
     public void AddUnitToFormation(Unit u)
     {
@@ -97,9 +93,6 @@ public class PlayerController : MonoBehaviour
 
     public ArmyAction GetPlayerFormation() => playerFormation;
 
-    private void Start() 
-    {
-        Create();  
-    }
+    private void Start() => Create();
 
 }

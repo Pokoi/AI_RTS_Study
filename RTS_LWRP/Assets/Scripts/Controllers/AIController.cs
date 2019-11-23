@@ -42,19 +42,13 @@ public class AIController : MonoBehaviour
 
     Actions<ArmyAction>     possibleActions;
     ArmyAction              selfFormation; 
-    Strips                  decisionMaker;
     AIAlgorithim<ArmyAction> teamFormer = null;
-
-
-
-    int score;    
-
-
-    public static AIController Get()                    => instance;
-    public int GetMaxUnitsInTeam()                      => maxUnitsInTeam;
-    public AIAlgorithim<ArmyAction> GetTeamFormer()     => teamFormer;
-    public uint GetPossibleActionsCount()               => possibleActions.GetCount();
-    public FormationAlgorithims GetFormationAlgorithim()  => formationAlgorithim;
+  
+    public static AIController      Get()                       => instance;
+    public int                      GetMaxUnitsInTeam()         => maxUnitsInTeam;
+    public AIAlgorithim<ArmyAction> GetTeamFormer()             => teamFormer;
+    public uint                     GetPossibleActionsCount()   => possibleActions.GetCount();
+    public FormationAlgorithims     GetFormationAlgorithim()    => formationAlgorithim;
     
     public AIController Create()
     {
@@ -66,28 +60,38 @@ public class AIController : MonoBehaviour
         return instance;
     }
     
+    public void OnBattleStart()    => InterpretateFormation();
     public void OnBattleEnd(ArmyAction oponentFormation, int score)
     {
         teamFormer.UpdateUtility(selfFormation, oponentFormation, score);
         int utility = teamFormer.GetUtilityOf(selfFormation, oponentFormation);
-
-        if (utility < 0)
-        {
-            UpdateScore(utility);
-        }
-        else if (utility == 0)
-        {
-            // Empate
-        }
-        else
-        {
-            PlayerController.Get().UpdateScore(utility);
-        }
         
         teamFormer.UpdateValues(oponentFormation);
     }
 
-    public void InterpreateFormation()
+    void Awake() 
+    {
+        Create();
+        
+        possibleActions = new Actions<ArmyAction>(maxUnitsInTeam);
+        
+        switch(formationAlgorithim)
+        {
+            case FormationAlgorithims.UCB1:
+            teamFormer = new UCB1<ArmyAction>(possibleActions);
+            break;
+
+            case FormationAlgorithims.RegretMatching:
+            teamFormer = new RegretMatching<ArmyAction>(possibleActions);
+            break;
+        }
+        
+        ChooseFormation();    
+    }
+
+    void ChooseFormation()  => selfFormation = teamFormer.Play(); 
+
+    void InterpretateFormation()
     {
         ArmyAction formation  = selfFormation;
         foreach (Unit unit in formation.GetUnits())
@@ -104,84 +108,24 @@ public class AIController : MonoBehaviour
             relativeCellData.SetEmpty(false);
 
             AI_unit.SetActive(true);
-            AI_unit.GetComponent<Soldier>().SetUnitType(AI_unitUnitType);
+            
+            Soldier  AI_unitSoldier = AI_unit.GetComponent<Soldier>();
+            TeamData team           = GameController.Get().GetAITeamData();
+
+            AI_unitSoldier.SetUnitType(AI_unitUnitType);
+            team.AddSoldier(AI_unitSoldier);
+            AI_unitSoldier.SetTeam(team);
+            
             AI_unit.GetComponent<DraggeableUnit>().enabled = false;
             
             AI_unit.transform.position = new Vector3 (cellDataWorldPosition.x, cellDataWorldPosition.y + 0.5f, cellDataWorldPosition.z);
         }
     }
 
-    void Awake() 
-    {
-        Create();
-        
-        decisionMaker   = new Strips();
-        CreateOperators();
-
-        possibleActions = new Actions<ArmyAction>(maxUnitsInTeam);
-        
-        switch(formationAlgorithim)
-        {
-            case FormationAlgorithims.UCB1:
-            teamFormer = new UCB1<ArmyAction>(possibleActions);
-            break;
-
-            case FormationAlgorithims.RegretMatching:
-            teamFormer = new RegretMatching<ArmyAction>(possibleActions);
-            break;
-        }
-        
-        Invoke(decisionMaker.GetNextAction(), 0);
-        
-    }
-
-    void ToChooseFormation()
-    {
-        selfFormation = teamFormer.Play();
-    }
-
-    void ToStartBattle()
-    {
-
-    }
-    void UpdateScore (int newScore) => this.score += newScore;
-
     void ToUpdateXML()
     {
         
     }
-
-    void ToUpdateScore()
-    {
-        
-    }
-
-    void CreateOperators()
-    {
-        List<OperatorStrips> operators      = new List<OperatorStrips>();
-
-        PropertyStrips formationChoosen     = new PropertyStrips("formationChoosen");
-        OperatorStrips toChooseFormation    = new OperatorStrips(null, formationChoosen,"ToChooseFormation");
-        operators.Add(toChooseFormation);
-        
-        PropertyStrips battled              = new PropertyStrips("battled");
-        OperatorStrips toBattle             = new OperatorStrips(formationChoosen, battled,"ToStartBattle");
-        operators.Add(toBattle);
-        
-        PropertyStrips scoreUpdated         = new PropertyStrips("scoreUpdated");
-        OperatorStrips toUpdateScore        = new OperatorStrips(battled, scoreUpdated,"ToUpdateScore");
-        operators.Add(toUpdateScore);
-
-        PropertyStrips goal                 = new PropertyStrips("Goal");
-        OperatorStrips toUpdateXML          = new OperatorStrips(scoreUpdated, goal,"ToUpdateXML");
-        operators.Add(toUpdateXML);
-
-        foreach (OperatorStrips stripOperator in operators)
-        {
-            decisionMaker.AddOperator(stripOperator);
-        }
-    }
-
 
 }
 

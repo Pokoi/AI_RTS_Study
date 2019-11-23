@@ -29,7 +29,6 @@
 
 
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Locomotion
@@ -71,7 +70,7 @@ public class Locomotion
             }
         }
     }
-    
+
     public bool IsInRange(CellData currentCellData, CellData goal, int range)
     {
         int currentY = currentCellData.GetY();
