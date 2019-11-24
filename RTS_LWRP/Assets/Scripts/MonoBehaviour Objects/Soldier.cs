@@ -74,6 +74,7 @@ public class Soldier : MonoBehaviour
         else
         {
             line.enabled = false;
+            slider.value = 1;
         }
     }
 
@@ -170,7 +171,7 @@ public class Soldier : MonoBehaviour
             line.SetPosition(1, target.transform.position);
             
             behaviour.Attack(target);
-            yield return new WaitForSeconds( 1 - behaviour.GetActionSpeed());
+            yield return new WaitForSeconds(1 - behaviour.GetActionSpeed());
             
             if(unitType == UnitType.healer)
             {

@@ -57,6 +57,26 @@ public class UnitData
         }
     }
 
+    public UnitData(UnitData unitData)
+    {
+        this.type = unitData.GetType();
+        switch(this.type)
+        {
+            case UnitType.healer:
+                this.behaviour = new HealerSoldier();
+            break;
+            case UnitType.melee:
+                this.behaviour = new MeleeSoldier();
+            break;
+            case UnitType.ranged:
+                this.behaviour = new RangedSoldier();
+            break;
+            case UnitType.tank:
+                this.behaviour = new TankSoldier();
+            break;
+        }
+    }
+
     public UnitBehaviour GetBehaviour() => this.behaviour;
     public UnitType GetType() => this.type;
 

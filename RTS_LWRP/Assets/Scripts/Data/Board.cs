@@ -56,6 +56,7 @@ public class BoardData
     public CellData GetCellDataAt(int x, int y)     => cells[x, y];
     public CellData GetPlayerCellsCenterCell()  => playerCellsCenterCell;
     public CellData GetBoardCenterCell()        => boardCenterCell;
+    public CellData [,] GetCells()              => cells;
 
     private BoardData(byte _rows, byte _columns)
     {

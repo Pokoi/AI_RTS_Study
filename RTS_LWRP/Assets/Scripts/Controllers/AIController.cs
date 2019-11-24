@@ -64,8 +64,13 @@ public class AIController : MonoBehaviour
     
     public void OnBattleStart()
     {
+        ChooseFormation();
         InterpretateFormation();
-        InterpretatePlayerFormation();
+
+        if(GameController.Get().currentGameMode == GameController.GameMode.AivsAi)
+        {
+            InterpretatePlayerFormation();
+        }
     }
 
     public void OnBattleEnd(ArmyAction oponentFormation, int score)
@@ -92,9 +97,9 @@ public class AIController : MonoBehaviour
             teamFormer = new RegretMatching<ArmyAction>(possibleActions);
             break;
         }
-        
-        //ChooseFormation();    
+         
     }
+
 
     void ChooseFormation()  => selfFormation = teamFormer.Play(); 
 
@@ -122,7 +127,7 @@ public class AIController : MonoBehaviour
             AI_unitSoldier.SetUnitType(AI_unitUnitType);
             team.AddSoldier(AI_unitSoldier);
             AI_unitSoldier.SetTeam(team);
-            AI_unitSoldier.SetUnit(unit);
+            AI_unitSoldier.SetUnit(new Unit(unit));
             AI_unitSoldier.Start();
             AI_unit.GetComponent<DraggeableUnit>().enabled = false;
             
@@ -136,23 +141,24 @@ public class AIController : MonoBehaviour
 
     uint playerIndex = 0;
     uint selfIndex = 0;
-
+    uint iterator = 0;
     public void DecideFormations()
     {
         selfFormation = possibleActions.GetAt(selfIndex);
         GameController.Get().SetPlayerFormation(possibleActions.GetAt(playerIndex));
-
         playerIndex++;
         if(playerIndex == possibleActions.GetCount())
         {
             playerIndex = 0;
             selfIndex++;
+            GameController.Get().UpdateXmL();
             if(selfIndex == possibleActions.GetCount())
             {
                 // GAME OVER
                 GameController.Get().OnGameEnds();
             }
         }
+
 
     }
 
@@ -180,7 +186,7 @@ public class AIController : MonoBehaviour
             AI_unitSoldier.SetUnitType(AI_unitUnitType);
             team.AddSoldier(AI_unitSoldier);
             AI_unitSoldier.SetTeam(team);
-            AI_unitSoldier.SetUnit(unit);
+            AI_unitSoldier.SetUnit(new Unit(unit));
             AI_unitSoldier.Start();
             AI_unit.GetComponent<DraggeableUnit>().enabled = false;
             

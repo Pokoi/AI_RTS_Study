@@ -55,6 +55,14 @@ public class BoardBehaviour : MonoBehaviour
                             );
     }
 
+    public void ResetCells()
+    {
+        foreach(CellData cell in boardData.GetCells())
+        {
+            cell.SetEmpty(true);
+        }
+    }
+
     private void Awake() 
     {
         cachedTransform             = transform;

@@ -41,22 +41,21 @@ public class GameController : MonoBehaviour
     public ScoreController  scoreController;
 
     public GameObject FINISHTEXT;
+    public enum GameMode{PlayerVsAi, AivsAi};
+    public GameMode         currentGameMode;
     
     static GameController   instance;
 
     TeamData playerTeamData;
     TeamData AITeamData;
-    TeamData AIDebugTeamData;
     bool callToEnd;
 
-    XmlFormationVariables formationVariablesXMLData;
-    XmlUCB1ObjectData UCB1ObjectData;
-    XmlRegretMatchingObjectData RegretMatchingObjectData;
+    XmlFormationVariables       formationVariablesXMLData;
+    XmlUtilityObjectData        UtilityObjectData;
 
     public static GameController Get()   => instance;
     public TeamData GetPlayerTeamData()  => playerTeamData;
     public TeamData GetAITeamData()      => AITeamData;
-    public TeamData GetAIDebugTeamData() => AIDebugTeamData;
 
     public void OnBattleEnds()
     {
@@ -76,60 +75,50 @@ public class GameController : MonoBehaviour
             // Calculate score
             int score = scoreController.CalculateScoreRelativeToAI(playerTeamData, AITeamData);
 
-            Debug.Log(score);
-            Debug.Log($"At {playerController.GetPlayerFormation().Index}");
-
             // Comunicate score to IA
             aiController.OnBattleEnd(playerController.GetPlayerFormation(), score); 
 
+            UtilityObjectData.ConvertArray(aiController.GetTeamFormer().GetUtility());
             
-            AIController.FormationAlgorithims usedAlgorithim = aiController.GetFormationAlgorithim();
-            switch (usedAlgorithim)
-            {
-                case AIController.FormationAlgorithims.UCB1:
-                UCB1ObjectData.ConvertArray(aiController.GetTeamFormer().GetUtility());
-                break;
-
-                case AIController.FormationAlgorithims.RegretMatching:
-                RegretMatching<ArmyAction> regretMatchingFormer = (RegretMatching<ArmyAction>) aiController.GetTeamFormer();
-                RegretMatchingObjectData.ConvertArray(regretMatchingFormer.GetUtility());
-                RegretMatchingObjectData.regret     = regretMatchingFormer.GetRegret();
-                RegretMatchingObjectData.chance     = regretMatchingFormer.GetChance();
-                break;
-
-            }
-
-            //-----------------------------------------------------------------------------------------------------------------------------------------------
-            // FOR AUTOMATIC KNOWLEDGE
             unitsPool.Reset();
             playerTeamData.ClearSoldiers();
             AITeamData.ClearSoldiers();
-            OnStartBattle();
+            
             //-----------------------------------------------------------------------------------------------------------------------------------------------
-            //OnGameEnds();
+            // FOR AUTOMATIC KNOWLEDGE
+
+            if(currentGameMode == GameMode.AivsAi)
+            {
+                OnStartBattle();
+            }
+
+            //-----------------------------------------------------------------------------------------------------------------------------------------------
+           
         }
     }
 
     private void Awake() 
     {
         instance = this;
+        UtilityObjectData  = new XmlUtilityObjectData();
         unitsPool.SetMaxUnitsCount(aiController.GetMaxUnitsInTeam() << 1);
         playerTeamData  = new PlayerTeam();
         AITeamData      = new AITeam();
-        AIDebugTeamData = new AIDebugTeam();
-        UCB1ObjectData  = new XmlUCB1ObjectData();
-        RegretMatchingObjectData = new XmlRegretMatchingObjectData();
-        Time.timeScale *= 2;
+        //Time.timeScale *= 100;
     }
 
     private void Start() 
     {
         CreateFormationVariablesXml();
-       // ReadAlgorithimXml();
-        //Invoke("OnPlayerDecideFormation", 3);
+        ReadAlgorithimXml();
+
+        Invoke("OnPlayerDecideFormation", 1f);
+        
     }
-    private void OnPlayerDecideFormation()
+    public void OnPlayerDecideFormation()
     {
+        playerController.ResetChoosenUnits();
+        boardBehaviour.ResetCells();
         // Center the camera in the player board
         BoardData   boardData                   = BoardData.Get();
         Vector3     playerCenterCellPosition    = boardBehaviour.GetWorldPositionOfCell(boardData.GetPlayerCellsCenterCell());
@@ -143,9 +132,12 @@ public class GameController : MonoBehaviour
     {
         //-----------------------------------------------------------------------------------------------------------------------------------------------
         // FOR AUTOMATIC KNOWLEDGE
-        AIController.Get().DecideFormations();
-        callToEnd = false;
+        if(currentGameMode == GameMode.AivsAi)
+        {
+            AIController.Get().DecideFormations();
+        }
         //-----------------------------------------------------------------------------------------------------------------------------------------------
+        callToEnd = false;
 
         // Center the camera in the board
         BoardData   boardData               = BoardData.Get();
@@ -186,28 +178,21 @@ public class GameController : MonoBehaviour
 
     public void OnGameEnds()
     {
-
-        FINISHTEXT.SetActive(true);
-       //Write the xml file
+        if(currentGameMode == GameMode.AivsAi)
+        {
+            FINISHTEXT.SetActive(true);
+         }
+       
        UpdateXmL();
-      
+
+       #if UNITY_EDITOR
+       UnityEditor.EditorApplication.isPlaying = false;
+       #endif
     }
 
-    void UpdateXmL()
+    public void UpdateXmL()
     {
-        AIController.FormationAlgorithims usedAlgorithim = aiController.GetFormationAlgorithim();
-        
-        switch (usedAlgorithim)
-        {
-            case AIController.FormationAlgorithims.UCB1:
-            XmlManaging.CreateFile<XmlUCB1ObjectData>(UCB1ObjectData, formationVariablesXMLData.UCB1ObjectDataPath);
-            break;
-
-            case AIController.FormationAlgorithims.RegretMatching:
-            XmlManaging.CreateFile<XmlRegretMatchingObjectData>(RegretMatchingObjectData, formationVariablesXMLData.RegretMatchingObjectDataPath);
-            break;
-
-        }
+        XmlManaging.CreateFile<XmlUtilityObjectData>(UtilityObjectData, formationVariablesXMLData.UCB1ObjectDataPath);
     }
 
     private void ShowCells()
@@ -258,7 +243,7 @@ public class GameController : MonoBehaviour
         byte unitTypesCount = (byte) System.Enum.GetNames(typeof(UnitType)).Length;
         uint actionsCount   = aiController.GetPossibleActionsCount();
 
-        UCB1XmlFilePath           += $"UCB1_{rows}x{columns}_{maxUnitsInTeam}_of_{unitTypesCount}.xml";
+        UCB1XmlFilePath           += $"UCB1_{rows}x{columns}_{maxUnitsInTeam}_of_{unitTypesCount}_fake.xml";
         RegretMatchingXmlFilePath += $"RM_{rows}x{columns}_{maxUnitsInTeam}_of_{unitTypesCount}.xml";
         formationVariablesPath    += $"FormationVariables_{rows}x{columns}_{maxUnitsInTeam}_of_{unitTypesCount}.xml";
         
@@ -278,24 +263,8 @@ public class GameController : MonoBehaviour
 
     private void ReadAlgorithimXml()
     {
-        AIController.FormationAlgorithims usedAlgorithim = aiController.GetFormationAlgorithim();
-        switch (usedAlgorithim)
-        {
-            case AIController.FormationAlgorithims.UCB1:
-            UCB1ObjectData = XmlManaging.ReadFile<XmlUCB1ObjectData>(formationVariablesXMLData.UCB1ObjectDataPath);
-            aiController.GetTeamFormer().SetUtility(UCB1ObjectData.CastToArrayOfArray());
-            break;
-
-            case AIController.FormationAlgorithims.RegretMatching:
-            RegretMatchingObjectData = XmlManaging.ReadFile<XmlRegretMatchingObjectData>(formationVariablesXMLData.RegretMatchingObjectDataPath);
-            RegretMatching<ArmyAction> regretMatchingFormer = (RegretMatching<ArmyAction>) aiController.GetTeamFormer();
-            regretMatchingFormer.SetUtility(RegretMatchingObjectData.CastToArrayOfArray());
-            regretMatchingFormer.SetRegret(RegretMatchingObjectData.regret);
-            regretMatchingFormer.SetChance(RegretMatchingObjectData.chance);
-            break;
-
-        }
-       
+        UtilityObjectData = XmlManaging.ReadFile<XmlUtilityObjectData>("Assets/XMLData/UCB1_2x4_2_of_4_fake.xml");
+        aiController.GetTeamFormer().SetUtility(UtilityObjectData.CastToArrayOfArray());
     }
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------

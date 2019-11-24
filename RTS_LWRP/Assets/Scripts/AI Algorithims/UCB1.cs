@@ -43,11 +43,18 @@ public class UCB1 <T> : AIAlgorithim <T> where T : Action
 
     public UCB1(Actions<T> _possibleActions) : base (_possibleActions)
     {
-        playedRounds                = 0;
         this.totalAvailableActions  = this.possibleActions.GetCount();
+        playedRounds                = (int) totalAvailableActions;
         timesPlayedByAction         = new int   [totalAvailableActions];
         scoreByAction               = new float [totalAvailableActions];
         UCB1scoresByAction          = new float [totalAvailableActions];
+
+        for(int i = 0; i < timesPlayedByAction.Length; ++i)
+        {
+            timesPlayedByAction[i] = 1;
+            scoreByAction[i] = this.GetUtility()[0][i];
+        }
+
     }
 
     public override T Play() => GetNextAction();
@@ -58,16 +65,24 @@ public class UCB1 <T> : AIAlgorithim <T> where T : Action
         float bestScore;
         float tempScore;
 
+        if(scoreByAction[0] == 0f)
+        {
+            for(int index = 0; index < timesPlayedByAction.Length; ++index)
+            {
+               
+                scoreByAction[index] = this.GetUtility()[0][index];
+            }
+        }
         // Las primeras numActions veces solo va probando cada una de las acciones.
         // Sería mejor hacer un Random de todas las acciones que aún no ha probado.
-        for (i = 0; i <totalAvailableActions; i++)
+       /* for (i = 0; i <totalAvailableActions; i++)
         {
             if (timesPlayedByAction[i] == 0)
             {
                 selfLastAction = possibleActions.GetAt((uint)i);
                 return selfLastAction;
             }
-        }
+        }*/
         // Si ya ha probado todas las acciones entonces aplica UCB1.
         best        = -1;
         bestScore   = int.MinValue;
@@ -93,12 +108,12 @@ public class UCB1 <T> : AIAlgorithim <T> where T : Action
     {
         playedRounds++;
         float utility;
-        T selfAction = GameController.Get().aiController.GetFormation() as T;
-        utility = GetUtilityOf(selfAction,oponentAction);
-        //utility = GetUtilityOf(selfLastAction, oponentAction);
-        scoreByAction[selfAction.Index] += utility;
-        //scoreByAction[selfLastAction.Index] += utility;
-        timesPlayedByAction[selfAction.Index]++;
-        //timesPlayedByAction[selfLastAction.Index]++;
+        //T selfAction = GameController.Get().aiController.GetFormation() as T;
+        //utility = GetUtilityOf(selfAction,oponentAction);
+        utility = GetUtilityOf(selfLastAction, oponentAction);
+        //scoreByAction[selfAction.Index] += utility;
+        scoreByAction[selfLastAction.Index] += utility;
+        //timesPlayedByAction[selfAction.Index]++;
+        timesPlayedByAction[selfLastAction.Index]++;
     }
 }

@@ -19,6 +19,12 @@ public class Unit
         this.position = cd;
     }
 
+    public Unit(Unit unit)
+    {
+        this.position = unit.GetPosition();
+        this.unitData = new UnitData(unit.GetUnitData());
+    }
+
     static public bool operator == (Unit thisCell, Unit otherCell)
     {
         return thisCell.GetPosition() == otherCell.GetPosition() && thisCell.GetUnitData() == otherCell.GetUnitData();

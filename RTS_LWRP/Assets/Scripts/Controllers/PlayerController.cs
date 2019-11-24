@@ -50,6 +50,7 @@ public class PlayerController : MonoBehaviour
     }
 
     public void UpdateChoosenUnits(int value)   => choosenUnitsCount += value;
+    public void ResetChoosenUnits()             => choosenUnitsCount = 0;
     public int  GetChoosenUnitsCount()          => choosenUnitsCount;
 
     public void AddUnitToFormation(Unit u)

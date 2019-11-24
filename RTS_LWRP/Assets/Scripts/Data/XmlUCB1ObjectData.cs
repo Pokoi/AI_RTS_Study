@@ -28,13 +28,14 @@
  */
 
 using System.Xml.Serialization;
+using UnityEngine;
 
-public class XmlUCB1ObjectData : XmlObjectData
+public class XmlUtilityObjectData : XmlObjectData
 {
     [XmlArray ("utility")] [XmlArrayItem ("ArmyAction")]
     public int [] utility;
 
-    public XmlUCB1ObjectData() {}
+    public XmlUtilityObjectData() {}
 
     public void ConvertArray(int [][] utility)
     {
@@ -52,17 +53,31 @@ public class XmlUCB1ObjectData : XmlObjectData
 
     public int[][] CastToArrayOfArray()
     {
-        int[][] toReturn = new int[utility.Length][];
-        int iterator = 0;
-        for(int i = 0; i < utility.Length; ++i)
+        int[][] toReturn = new int[(int)Mathf.Sqrt(utility.Length)][];
+        int count = 0;
+
+        while(count < toReturn.Length)
         {
-            for (int j = 0; j < utility.Length; ++j)
+            toReturn[count] = new int[(int)Mathf.Sqrt(utility.Length)];
+            count++;
+        }
+        
+        int     i        = 0;
+        int     j        = 0;
+
+        for (int iterator = 0; iterator < this.utility.Length; ++iterator)
+        {
+            
+            toReturn[i][j] = this.utility[iterator];
+            ++j;
+
+            if(j == toReturn.Length)
             {
-                toReturn[i][j] = this.utility[iterator];
-                ++iterator;
+                j = 0;
+                ++i;
             }
         }
-
+       
         return toReturn;
     }
 }

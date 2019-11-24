@@ -121,7 +121,7 @@ public class TankSoldier : UnitBehaviour
     public override void Reset()
     {
         this.health = this.totalHealth = 1000;
-        this.damage = 5;
+        this.damage = 7;
         this.actionSpeed = 0.4f;
         this.attackRange = 1;
         this.damageDone = 0;
