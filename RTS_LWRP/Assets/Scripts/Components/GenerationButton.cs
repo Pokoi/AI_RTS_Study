@@ -63,8 +63,9 @@ public class GenerationButton : MonoBehaviour
         unit.SetActive(true);
 
         DraggeableUnit draggeableUnitComponent = unit.GetComponent<DraggeableUnit>();
-        
-        if(draggeableUnitComponent == null)
+        draggeableUnitComponent.enabled = true;
+
+        if (draggeableUnitComponent == null)
         {
            draggeableUnitComponent = unit.AddComponent<DraggeableUnit>();
         }

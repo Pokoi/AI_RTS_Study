@@ -57,7 +57,8 @@ public class DraggeableUnit : MonoBehaviour
 
     private void Update() 
     {
-        if(Input.GetMouseButtonDown(0)&& followCursorComponent.GetFollowing())
+       
+       if(Input.GetMouseButtonDown(0)&& followCursorComponent.GetFollowing())
         {
             DropPlaceable();
         }
@@ -83,7 +84,7 @@ public class DraggeableUnit : MonoBehaviour
             if(targetCellData.IsEmpty())
             {
                 float yModifier     = 0.5f;
-                transform.position  = new Vector3 (
+                transform.localPosition  = new Vector3 (
                                                     lastCellCollidedWith.transform.position.x, 
                                                     lastCellCollidedWith.transform.position.y + yModifier,
                                                     lastCellCollidedWith.transform.position.z

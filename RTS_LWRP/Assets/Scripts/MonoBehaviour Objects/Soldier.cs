@@ -40,7 +40,6 @@ public class Soldier : MonoBehaviour
     Locomotion          locomotion;
     TeamData            team;
     List<Soldier>       targetSoldiers;
-    LineRenderer        line;
     Slider              slider;
     bool                readyToFight;
 
@@ -73,7 +72,6 @@ public class Soldier : MonoBehaviour
         }
         else
         {
-            line.enabled = false;
             slider.value = 1;
         }
     }
@@ -95,8 +93,6 @@ public class Soldier : MonoBehaviour
     {
         battleDecisionMaker = new BattleDecisionMaker(this);
         locomotion          = new Locomotion(transform);
-        line                = GetComponent<LineRenderer>();
-        line.enabled        = false;
         slider              = GetComponentInChildren<Slider>();
         slider.GetComponentInParent<Canvas>().worldCamera = Camera.main; 
     }
@@ -136,11 +132,7 @@ public class Soldier : MonoBehaviour
 
                 case TeamData.Owners.AI:
                     targetSoldiers = GameController.Get().GetPlayerTeamData().GetSoldiers();
-                break;
-
-                case TeamData.Owners.AIDebug:
-                    targetSoldiers = GameController.Get().GetAITeamData().GetSoldiers();
-                break;
+                break;                
             }
         }
     }
@@ -165,10 +157,7 @@ public class Soldier : MonoBehaviour
         //while(locomotion.IsInRange(this.GetPosition(), target.GetPosition(), range))
         while(true && target != null)
         {
-            line.enabled = true;
-            line.SetColors(team.GetDebugColor(), team.GetDebugColor());
-            line.SetPosition(0, transform.position);
-            line.SetPosition(1, target.transform.position);
+            Debug.DrawLine(transform.position, target.transform.position, team.GetDebugColor(), behaviour.GetActionSpeed());
             
             behaviour.Attack(target);
             yield return new WaitForSeconds(1 - behaviour.GetActionSpeed());
@@ -193,7 +182,6 @@ public class Soldier : MonoBehaviour
             }
         }
 
-        line.enabled = false;
         Battle();
     }
 

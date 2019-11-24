@@ -131,7 +131,7 @@ public class AIController : MonoBehaviour
             AI_unitSoldier.Start();
             AI_unit.GetComponent<DraggeableUnit>().enabled = false;
             
-            AI_unit.transform.position = new Vector3 (cellDataWorldPosition.x, cellDataWorldPosition.y + 0.5f, cellDataWorldPosition.z);
+            AI_unit.transform.localPosition = new Vector3 (cellDataWorldPosition.x, cellDataWorldPosition.y + 0.5f, cellDataWorldPosition.z);
         }
     }
 
