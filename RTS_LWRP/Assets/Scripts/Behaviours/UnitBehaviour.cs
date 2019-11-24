@@ -79,11 +79,11 @@ public class HealerSoldier : UnitBehaviour
 
     public override void Reset()
     {
-        this.health = this.totalHealth = 400;
-        this.damage = -5;
-        this.actionSpeed = 0.3f;
-        this.attackRange = 3;
-        this.damageDone = 0;
+        this.health         = this.totalHealth = 400;
+        this.damage         = -5;
+        this.actionSpeed    = 0.3f;
+        this.attackRange    = 3;
+        this.damageDone     = 0;
     }
 }
 
@@ -99,11 +99,11 @@ public class MeleeSoldier : UnitBehaviour
 
     public override void Reset()
     {
-        this.health = this.totalHealth = 500;
-        this.damage = 10;
-        this.actionSpeed = 0.45f;
-        this.attackRange = 1;
-        this.damageDone = 0;
+        this.health         = this.totalHealth = 500;
+        this.damage         = 10;
+        this.actionSpeed    = 0.45f;
+        this.attackRange    = 1;
+        this.damageDone     = 0;
     }
 }
 
@@ -120,11 +120,11 @@ public class TankSoldier : UnitBehaviour
 
     public override void Reset()
     {
-        this.health = this.totalHealth = 1000;
-        this.damage = 7;
-        this.actionSpeed = 0.4f;
-        this.attackRange = 1;
-        this.damageDone = 0;
+        this.health         = this.totalHealth = 1000;
+        this.damage         = 7;
+        this.actionSpeed    = 0.4f;
+        this.attackRange    = 1;
+        this.damageDone     = 0;
     }
 }
 
@@ -140,10 +140,10 @@ public class RangedSoldier : UnitBehaviour
 
     public override void Reset()
     {
-        this.health = this.totalHealth = 200;
-        this.damage = 15;
-        this.actionSpeed = 0.6f;
-        this.attackRange = 2;
-        this.damageDone = 0;
+        this.health         = this.totalHealth = 200;
+        this.damage         = 15;
+        this.actionSpeed    = 0.6f;
+        this.attackRange    = 2;
+        this.damageDone     = 0;
     }
 }

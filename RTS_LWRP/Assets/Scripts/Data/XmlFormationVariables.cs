@@ -27,9 +27,6 @@
  * SOFTWARE.
  */
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class XmlFormationVariables : XmlObjectData
 {

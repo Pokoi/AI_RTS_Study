@@ -36,10 +36,8 @@ public class CameraBehaviour : MonoBehaviour
 
     Transform cachedTransform;
 
-    private void Awake() 
-    {
-        cachedTransform = transform;    
-    }
+    private void Awake() => cachedTransform = transform;  
+    
     public void CenterToPosition(Vector3 targetPosition)
     {
         Vector3 desiredPosition = new Vector3 (targetPosition.x, cachedTransform.position.y, cachedTransform.position.z);

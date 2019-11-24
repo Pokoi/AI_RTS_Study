@@ -28,16 +28,14 @@
  */
 
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FollowCursor
 {
-    bool following;
-    Transform transformToMove;
-    float movementSpeed = 2.6f;
-
-    LayerMask layerMask;
+    bool        following;
+    Transform   transformToMove;
+    float       movementSpeed = 2.6f;
+    LayerMask   layerMask;
 
     public FollowCursor(Transform transformToMove, LayerMask layerMask) 
     {

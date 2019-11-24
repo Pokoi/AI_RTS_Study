@@ -33,18 +33,14 @@ using UnityEngine;
 
 public class DraggeableUnit : MonoBehaviour
 {
-    public LayerMask layerMask;
-    public static bool draggingUnit;
-    FollowCursor followCursorComponent;
-    Cell lastCellCollidedWith;
+    public LayerMask    layerMask;
+    public static bool  draggingUnit;
+    FollowCursor        followCursorComponent;
+    Cell                lastCellCollidedWith;
 
 
     public FollowCursor GetFollowCursorComponent() => followCursorComponent;
 
-    private void Start()
-    {
-        AddFollowCursorComponent();    
-    }
     public void AddFollowCursorComponent()
     {
         if(this.followCursorComponent == null)
@@ -54,10 +50,11 @@ public class DraggeableUnit : MonoBehaviour
 
         DragPlaceable();
     }
+    
+    private void Start() =>  AddFollowCursorComponent(); 
 
     private void Update() 
     {
-       
        if(Input.GetMouseButtonDown(0)&& followCursorComponent.GetFollowing())
         {
             DropPlaceable();

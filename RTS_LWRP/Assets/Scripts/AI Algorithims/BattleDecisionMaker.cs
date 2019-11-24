@@ -35,9 +35,9 @@ using UnityEngine;
 public class BattleDecisionMaker 
 {
     Soldier selfSoldier;
-    byte remainingHealthWeight  = 1;
-    byte damageDoneWeight       = 2;
-    byte distanceWeight         = 1;
+    byte    remainingHealthWeight  = 1;
+    byte    damageDoneWeight       = 2;
+    byte    distanceWeight         = 1;
 
     public BattleDecisionMaker(Soldier selfSoldier) => this.selfSoldier = selfSoldier;
 

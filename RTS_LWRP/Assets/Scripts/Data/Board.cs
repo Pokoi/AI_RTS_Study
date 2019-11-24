@@ -31,12 +31,13 @@ using UnityEngine;
 
 public class BoardData
 {
-    static byte rows = 0, columns = 0;
+    static byte         rows    = 0;
+    static byte         columns = 0;
     static CellData [,] cells;
-    static BoardData instance;
+    static BoardData    instance;
 
-    static CellData playerCellsCenterCell;
-    static CellData boardCenterCell;
+    static CellData     playerCellsCenterCell;
+    static CellData     boardCenterCell;
 
     public static BoardData Create(byte rows, byte columns)
     {   

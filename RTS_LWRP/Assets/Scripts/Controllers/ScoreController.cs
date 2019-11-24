@@ -37,12 +37,6 @@ public class ScoreController : MonoBehaviour
     public TextMeshProUGUI playerTeamScoreText;
     public TextMeshProUGUI AITeamScoreText;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     public int CalculateScoreRelativeToAI(TeamData playerTeam, TeamData AITeam)
     {
         int playerScore = 0;

@@ -46,9 +46,9 @@ public class GameController : MonoBehaviour
     
     static GameController   instance;
 
-    TeamData playerTeamData;
-    TeamData AITeamData;
-    bool callToEnd;
+    TeamData    playerTeamData;
+    TeamData    AITeamData;
+    bool        callToEnd;
 
     XmlFormationVariables       formationVariablesXMLData;
     XmlUtilityObjectData        UtilityObjectData;

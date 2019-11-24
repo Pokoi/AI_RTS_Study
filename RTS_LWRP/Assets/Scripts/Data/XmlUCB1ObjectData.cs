@@ -41,6 +41,7 @@ public class XmlUtilityObjectData : XmlObjectData
     {
         this.utility = new int [utility.Length * utility.Length];
         int iterator = 0;
+        
         for(int i = 0; i < utility.Length; ++i)
         {
             for (int j = 0; j < utility.Length; ++j)
@@ -54,7 +55,7 @@ public class XmlUtilityObjectData : XmlObjectData
     public int[][] CastToArrayOfArray()
     {
         int[][] toReturn = new int[(int)Mathf.Sqrt(utility.Length)][];
-        int count = 0;
+        int count        = 0;
 
         while(count < toReturn.Length)
         {
@@ -62,8 +63,8 @@ public class XmlUtilityObjectData : XmlObjectData
             count++;
         }
         
-        int     i        = 0;
-        int     j        = 0;
+        int i  = 0;
+        int j  = 0;
 
         for (int iterator = 0; iterator < this.utility.Length; ++iterator)
         {

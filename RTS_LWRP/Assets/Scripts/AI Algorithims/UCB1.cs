@@ -52,7 +52,6 @@ public class UCB1 <T> : AIAlgorithim <T> where T : Action
         for(int i = 0; i < timesPlayedByAction.Length; ++i)
         {
             timesPlayedByAction[i] = 1;
-            scoreByAction[i] = this.GetUtility()[0][i];
         }
 
     }
@@ -69,21 +68,10 @@ public class UCB1 <T> : AIAlgorithim <T> where T : Action
         {
             for(int index = 0; index < timesPlayedByAction.Length; ++index)
             {
-               
                 scoreByAction[index] = this.GetUtility()[0][index];
             }
         }
-        // Las primeras numActions veces solo va probando cada una de las acciones.
-        // Sería mejor hacer un Random de todas las acciones que aún no ha probado.
-       /* for (i = 0; i <totalAvailableActions; i++)
-        {
-            if (timesPlayedByAction[i] == 0)
-            {
-                selfLastAction = possibleActions.GetAt((uint)i);
-                return selfLastAction;
-            }
-        }*/
-        // Si ya ha probado todas las acciones entonces aplica UCB1.
+        
         best        = -1;
         bestScore   = int.MinValue;
         for(i = 0; i <totalAvailableActions; i++)

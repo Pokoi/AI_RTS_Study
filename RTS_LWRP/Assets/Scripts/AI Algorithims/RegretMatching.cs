@@ -33,24 +33,24 @@ using UnityEngine;
 
 public class RegretMatching <T> : AIAlgorithim <T> where T : Action
 {
-    float initial_regret = 10f;
-    public float[] regret;
-    public float[] chance;
-    public T last_action;
-    public uint num_actions;
+    float           initial_regret = 10f;
+    public float[]  regret;
+    public float[]  chance;
+    public T        last_action;
+    public uint     num_actions;
 
-    public float [] GetRegret() => regret;
-    public float [] GetChance() => chance;
-    public void SetRegret(float [] regret) => this.regret = regret;
-    public void SetChance(float [] chance) => this.chance = chance;
+    public float [] GetRegret()                 => regret;
+    public float [] GetChance()                 => chance;
+    public void     SetRegret(float [] regret)  => this.regret = regret;
+    public void     SetChance(float [] chance)  => this.chance = chance;
+    public override T Play()                    => GetNextAction();
+    
     public RegretMatching(Actions<T> _possibleActions) : base (_possibleActions)
     {
         num_actions = _possibleActions.GetCount();
         regret      = new float[num_actions];
         chance      = new float[num_actions];
     }
-
-    public override T Play() => GetNextAction();
 
     public override T GetNextAction()
     {

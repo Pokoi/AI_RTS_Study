@@ -33,15 +33,14 @@ using UnityEngine;
 
 public class LookAtCamera : MonoBehaviour
 {
-    public float secondsBetweenRefresh = 0.25f;
+    public float        secondsBetweenRefresh = 0.25f;
 
-    public Transform transformToFace;
-    Transform cameraTransform;
+    public Transform    transformToFace;
+    Transform           cameraTransform;
 
-    // Start is called before the first frame update
+    
     void Start()
     {
-    
         cameraTransform = Camera.main.transform;
         StartCoroutine(FacingToCamera(secondsBetweenRefresh));
     }

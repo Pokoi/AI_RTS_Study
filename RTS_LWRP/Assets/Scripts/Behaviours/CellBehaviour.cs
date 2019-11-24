@@ -44,11 +44,7 @@ public class CellBehaviour
         cellSize        = GetColliderSize();
     }
     public void CellDataInitializer(int x, int y) => cellData = BoardData.Get().GetCellDataAt(x,y);
-    public CellData GetCellData() => cellData;
-    private Vector3 GetColliderSize() => collider.bounds.size;
+    public CellData GetCellData()                 => cellData;
+    private Vector3 GetColliderSize()             => collider.bounds.size;
     
-    public void OnTriggerEnter(Collider other) 
-    {
-        // Do something when the cell collides with something
-    }
 }

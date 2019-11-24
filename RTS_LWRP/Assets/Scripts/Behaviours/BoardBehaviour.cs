@@ -33,7 +33,8 @@ using UnityEngine;
 
 public class BoardBehaviour : MonoBehaviour
 {
-    [SerializeField] byte boardRows = 0, boardColumns = 0;
+    [SerializeField] byte boardRows     = 0;
+    [SerializeField] byte boardColumns  = 0;
     [SerializeField] GameObject cellPrefab = null;
     
     BoardData boardData;

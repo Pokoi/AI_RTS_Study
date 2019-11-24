@@ -36,7 +36,7 @@ public class AIAlgorithim <T> where T : Action
 {
    
     public Actions<T>    possibleActions;
-    private int [][]    utility;
+    private int [][]     utility;
     
     public AIAlgorithim(Actions<T> _possibleActions)
     {

@@ -27,26 +27,25 @@
  * SOFTWARE.
  */
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+
 using System.Xml.Serialization;
 
 public class XmlRegretMatchingObjectData : XmlObjectData
 {
      [XmlArray ("utility")] [XmlArrayItem ("ArmyAction")]
-    public int [] utility;
+    public int      [] utility;
     
     [XmlArray ("regret")] [XmlArrayItem ("percentage")]
-    public float [] regret;
+    public float    [] regret;
 
     [XmlArray ("chance")] [XmlArrayItem ("percentage")]
-    public float [] chance;
+    public float    [] chance;
 
     public void ConvertArray(int [][] utility)
     {
         this.utility = new int [utility.Length * utility.Length];
         int iterator = 0;
+        
         for(int i = 0; i < utility.Length; ++i)
         {
             for (int j = 0; j < utility.Length; ++j)
@@ -60,7 +59,8 @@ public class XmlRegretMatchingObjectData : XmlObjectData
     public int[][] CastToArrayOfArray()
     {
         int[][] toReturn = new int[utility.Length][];
-        int iterator = 0;
+        int iterator     = 0;
+        
         for(int i = 0; i < utility.Length; ++i)
         {
             for (int j = 0; j < utility.Length; ++j)

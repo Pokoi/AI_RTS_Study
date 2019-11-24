@@ -27,14 +27,10 @@
  * SOFTWARE.
  */
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class UnitData 
 {
-    private UnitType    type;
-    private UnitBehaviour behaviour;
+    private UnitType        type;
+    private UnitBehaviour   behaviour;
 
     public UnitData(UnitType type)
     {
@@ -78,12 +74,7 @@ public class UnitData
     }
 
     public UnitBehaviour GetBehaviour() => this.behaviour;
-    public UnitType GetType() => this.type;
-
-    public override int GetHashCode()
-    {
-        return base.GetHashCode();
-    }
+    public UnitType      GetType()      => this.type;
 
     public void SetUnitBehaviour (UnitBehaviour behaviour) => this.behaviour = behaviour;
 
@@ -92,7 +83,7 @@ public class UnitData
         return thisUnitData.GetType() == otherUnitData.GetType();
     }
 
-     static public bool operator != (UnitData thisUnitData, UnitData otherUnitData) => !(thisUnitData == otherUnitData);
+    static public bool operator != (UnitData thisUnitData, UnitData otherUnitData) => !(thisUnitData == otherUnitData);
     
 }
 

@@ -27,7 +27,6 @@
  * SOFTWARE.
  */
 
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -117,17 +116,6 @@ public class AITeam: TeamData
     {
         owner           = Owners.AI;
         debugLineColor  = Color.red;
-        teamScore       = 0;
-        teamSoldiers    = new List<Soldier>();
-    }
-}
-
-public class AIDebugTeam: TeamData
-{
-    public AIDebugTeam()
-    {
-        owner           = Owners.AIDebug;
-        debugLineColor  = Color.yellow;
         teamScore       = 0;
         teamSoldiers    = new List<Soldier>();
     }

@@ -27,18 +27,23 @@
  * SOFTWARE.
  */
 
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    int choosenUnitsCount;
+    int                     choosenUnitsCount;
     static PlayerController instance;
 
     ArmyAction playerFormation;
     
-    public static PlayerController Get()    => instance;
+    public static PlayerController Get()        => instance;
+    public void UpdateChoosenUnits(int value)   => choosenUnitsCount += value;
+    public void ResetChoosenUnits()             => choosenUnitsCount = 0;
+    public int  GetChoosenUnitsCount()          => choosenUnitsCount;
+    public ArmyAction GetPlayerFormation()      => playerFormation;
+    public ArmyAction SetPlayerFormation(ArmyAction formation) => playerFormation = formation;
+
     public PlayerController Create()
     {
         if(instance == null)
@@ -48,11 +53,6 @@ public class PlayerController : MonoBehaviour
 
         return instance;
     }
-
-    public void UpdateChoosenUnits(int value)   => choosenUnitsCount += value;
-    public void ResetChoosenUnits()             => choosenUnitsCount = 0;
-    public int  GetChoosenUnitsCount()          => choosenUnitsCount;
-
     public void AddUnitToFormation(Unit u)
     {
         if(playerFormation is null)
@@ -92,8 +92,6 @@ public class PlayerController : MonoBehaviour
         }        
     }
 
-    public ArmyAction GetPlayerFormation() => playerFormation;
-    public ArmyAction SetPlayerFormation(ArmyAction formation) => playerFormation = formation;
 
     private void Start() => Create();
 
